@@ -2,12 +2,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {
+  console.log('News expand API: START - API called');
   try {
     const url = new URL(req.url);
     const playerId = Number(url.searchParams.get('playerId') || '0');
     const teamId = Number(url.searchParams.get('teamId') || '0');
     
     console.log('News expand API: playerId=', playerId, 'teamId=', teamId);
+    console.log('News expand API: URL=', req.url);
 
     // Simple test response
     if (playerId > 0) {
@@ -37,6 +39,7 @@ export async function GET(req: NextRequest) {
     console.error('API /news/expand error', e);
     console.error('API /news/expand error details:', e);
     console.error('API /news/expand error stack:', e instanceof Error ? e.stack : 'No stack');
+    console.log('News expand API: RETURNING ERROR RESPONSE');
     return NextResponse.json({ 
       paragraphs: [
         'Gagal memuat penerangan lanjut.',
