@@ -131,8 +131,25 @@ export default function NewsPage() {
   const [open, setOpen] = React.useState(false);
   const [selectedCategory, setSelectedCategory] = React.useState<string>('all');
 
-  const openModal = (it: NewsItem) => { setSelected(it); setOpen(true); };
-  const closeModal = () => { setOpen(false); setSelected(null); };
+  // Debug state changes
+  React.useEffect(() => {
+    console.log('NewsPage: open state changed to:', open);
+  }, [open]);
+  
+  React.useEffect(() => {
+    console.log('NewsPage: selected state changed to:', selected);
+  }, [selected]);
+
+  const openModal = (it: NewsItem) => { 
+    console.log('NewsPage: Opening modal for item:', it);
+    setSelected(it); 
+    setOpen(true); 
+  };
+  const closeModal = () => { 
+    console.log('NewsPage: Closing modal');
+    setOpen(false); 
+    setSelected(null); 
+  };
 
   const load = async (category = selectedCategory) => {
     setLoading(true); setErr(null);
