@@ -11,3 +11,9 @@
 # Enable serverless functions
 [functions]
   directory = ".next/server"
+
+# Redirects for API routes
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
