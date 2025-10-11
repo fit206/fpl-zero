@@ -38,12 +38,19 @@ export default function KitImage({
 
   const handleError = () => {
     console.log(`KitImage error for teamCode=${teamCode}, teamId=${teamId}, role=${role}, idx=${idx}`);
+    console.log(`Current URL: ${src}`);
     if (idx < paths.length - 1) {
       setIdx(idx + 1);
     } else {
       setHasError(true);
     }
   };
+
+  // Debug logging
+  React.useEffect(() => {
+    console.log(`KitImage render: teamCode=${teamCode}, teamId=${teamId}, role=${role}, size=${size}`);
+    console.log(`KitImage URL: ${src}`);
+  }, [teamCode, teamId, role, size, src]);
 
   if (hasError) {
     // Fallback: show team code or a placeholder

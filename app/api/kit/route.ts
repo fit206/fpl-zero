@@ -78,7 +78,10 @@ export async function GET(req: NextRequest) {
     | 'crest';
   const size = (Number(searchParams.get('size')) === 66 ? 66 : 110) as 110 | 66;
 
+  console.log(`Kit API called: teamCode=${teamCode}, teamId=${teamId}, role=${role}, size=${size}`);
+
   const candidates = buildCandidates(teamCode, teamId, size, role);
+  console.log(`Candidates:`, candidates);
 
   for (const url of candidates) {
     try {
