@@ -21,6 +21,15 @@ export default function NewsModal({ open, item, onClose }: Props) {
   
   console.log('NewsModal render: open=', open, 'item=', item, 'paras=', paras, 'loading=', loading);
   
+  // Debug modal closing
+  React.useEffect(() => {
+    if (!open) {
+      console.log('NewsModal: Modal closed, resetting state');
+      setParas(null);
+      setLoading(false);
+    }
+  }, [open]);
+  
   // Debug state changes
   React.useEffect(() => {
     console.log('NewsModal: paras state changed to:', paras);
@@ -115,7 +124,10 @@ export default function NewsModal({ open, item, onClose }: Props) {
 
   return (
     <div className="fixed inset-0 z-[100]">
-      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={(e) => {
+        console.log('NewsModal: Backdrop clicked, closing modal');
+        onClose();
+      }} />
       <div className="absolute left-1/2 top-1/2 w-[92vw] max-w-2xl -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-white text-slate-900 shadow-xl border border-gray-200 overflow-hidden">
         <div className="relative h-56 md:h-64 bg-slate-50">
           {/* eslint-disable-next-line @next/next/no-img-element */}
