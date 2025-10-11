@@ -42,8 +42,11 @@ export default function NewsModal({ open, item, onClose }: Props) {
         else if (item.kind === 'team') qs = `teamId=${item.teamId}`;
         
         console.log('NewsModal: Fetching expand API with:', qs);
-        const res = await fetch(`/api/news/expand?${qs}`, { signal: controller.signal, cache: 'no-store' });
+        const apiUrl = `/api/news/expand?${qs}`;
+        console.log('NewsModal: Full API URL:', apiUrl);
+        const res = await fetch(apiUrl, { signal: controller.signal, cache: 'no-store' });
         console.log('NewsModal: API response status:', res.status);
+        console.log('NewsModal: API response ok:', res.ok);
         const json = await res.json();
         console.log('NewsModal: API response data:', json);
         console.log('NewsModal: paragraphs:', json?.paragraphs);
