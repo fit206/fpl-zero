@@ -43,15 +43,21 @@ export default function HomePage() {
   const [proMode, setProMode] = React.useState(false);
   // Load saved data on component mount
   React.useEffect(() => {
+    console.log('HomePage: Loading saved data from localStorage');
     const savedData = localStorage.getItem('transferData');
     const savedProMode = localStorage.getItem('proMode');
+    
+    console.log('HomePage: savedData =', savedData);
+    console.log('HomePage: savedProMode =', savedProMode);
     
     if (savedData) {
       try {
         const parsedData = JSON.parse(savedData);
+        console.log('HomePage: parsedData =', parsedData);
+        
         if (parsedData.entryId && parsedData.managerName && parsedData.teamName) {
+          console.log('HomePage: Setting entryId to', parsedData.entryId.toString());
           setEntryId(parsedData.entryId.toString());
-          
           
           // Reconstruct the data object for display
           setData({
@@ -64,10 +70,15 @@ export default function HomePage() {
             bank: parsedData.bank || 0,
             // Add other required fields with default values
           });
+          console.log('HomePage: Data loaded successfully');
+        } else {
+          console.log('HomePage: Missing required fields in saved data');
         }
       } catch (err) {
         console.error('Error loading saved data:', err);
       }
+    } else {
+      console.log('HomePage: No saved data found');
     }
     
     // Load Pro Mode state
