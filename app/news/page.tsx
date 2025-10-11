@@ -77,7 +77,7 @@ function NewsCard({ it }: { it: NewsItem }) {
           onError={(e) => {
             // Fallback: jika headshot gagal, cuba crest team
             if (isPlayer) {
-              console.log('Headshot failed, falling back to crest for:', it.name);
+              // Silent fallback - no console log needed
               (e.currentTarget as HTMLImageElement).src = crest(teamShort, teamCode);
             } else {
               (e.currentTarget as HTMLImageElement).src = '/player-placeholder.svg';
