@@ -91,7 +91,7 @@ export async function GET(req: NextRequest) {
         home = f.team_h === p.team;
         if (homeTeam && awayTeam) {
           try {
-            const smart = await predictSmart({ home: homeTeam, away: awayTeam, boot, fixture: f });
+            const smart = await predictSmart({ home: homeTeam, away: awayTeam, boot });
             lamTeam = home ? smart.lambdas.home : smart.lambdas.away;
             lamOpp  = home ? smart.lambdas.away : smart.lambdas.home;
             csPct = Math.exp(-lamOpp) * 100;
