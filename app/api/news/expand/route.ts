@@ -20,9 +20,9 @@ function posShort(element_type: number, element_types: { id:number; singular_nam
 
 export async function GET(req: NextRequest) {
   try {
-    const { searchParams } = new URL(req.url);
-    const playerId = Number(searchParams.get('playerId') || '0');
-    const teamId = Number(searchParams.get('teamId') || '0');
+    const url = new URL(req.url);
+    const playerId = Number(url.searchParams.get('playerId') || '0');
+    const teamId = Number(url.searchParams.get('teamId') || '0');
     
     console.log('News expand API: playerId=', playerId, 'teamId=', teamId);
 

@@ -5,10 +5,10 @@ import { buildNews } from '@/lib/news/build';
 
 export async function GET(req: NextRequest) {
   try {
-    const { searchParams } = new URL(req.url);
-    const sinceHours = Number(searchParams.get('sinceHours') || '1'); // default 1 jam untuk berita terkini
-    const teamId = searchParams.get('teamId');
-    const category = searchParams.get('category'); // Filter by category
+    const url = new URL(req.url);
+    const sinceHours = Number(url.searchParams.get('sinceHours') || '1'); // default 1 jam untuk berita terkini
+    const teamId = url.searchParams.get('teamId');
+    const category = url.searchParams.get('category'); // Filter by category
     const boot = await getBootstrap();
     let news = await buildNews(boot, Number.isFinite(sinceHours) ? sinceHours : 1, teamId ? Number(teamId) : undefined);
     
