@@ -66,14 +66,14 @@ export async function GET(req: NextRequest) {
           code: th.code,
           short: th.short_name || th.name,
           name: th.name,
-          crest: th.code ? `https://fantasy.premierleague.com/dist/img/badges/badge_${th.code}-70.png` : `https://resources.premierleague.com/premierleague/badges/70/t${th.id}.png`
+          crest: `https://resources.premierleague.com/premierleague/badges/70/t${th.id}.png`
         },
         away: {
           id: ta.id,
           code: ta.code,
           short: ta.short_name || ta.name,
           name: ta.name,
-          crest: ta.code ? `https://fantasy.premierleague.com/dist/img/badges/badge_${ta.code}-70.png` : `https://resources.premierleague.com/premierleague/badges/70/t${ta.id}.png`
+          crest: `https://resources.premierleague.com/premierleague/badges/70/t${ta.id}.png`
         },
         kickoff_time: f.kickoff_time || null,
         dayKey: dt ? fmtDay(dt) : 'TBC',
