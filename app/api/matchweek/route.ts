@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getBootstrap, getFixtures } from '@/lib/fpl/api';
 // Prediction functions removed
 import type { Bootstrap, Fixture, Team } from '@/lib/fpl/types';
+import { TEAM_BADGE_MAPPING } from '@/lib/crests/team-mapping';
 
 function activeEventId(boot: Bootstrap, pref?: 'current' | 'next' | number): number {
   if (typeof pref === 'number') return pref;
@@ -69,14 +70,14 @@ export async function GET(req: NextRequest) {
           code: th.code,
           short: th.short_name || th.name,
           name: th.name,
-          crest: `https://resources.premierleague.com/premierleague/badges/70/t${th.id}.png`
+          crest: `/crests/fallback.svg`
         },
         away: {
           id: ta.id,
           code: ta.code,
           short: ta.short_name || ta.name,
           name: ta.name,
-          crest: `https://resources.premierleague.com/premierleague/badges/70/t${ta.id}.png`
+          crest: `/crests/fallback.svg`
         },
         kickoff_time: f.kickoff_time || null,
         dayKey: dt ? fmtDay(dt) : 'TBC',
