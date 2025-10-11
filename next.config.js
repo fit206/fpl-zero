@@ -6,8 +6,8 @@ const nextConfig = {
   },
   // Ensure API routes work on Netlify
   trailingSlash: false,
-  // Enable serverless functions
-  output: 'standalone'
+  // Remove output: 'standalone' for Netlify
+  // output: 'standalone'
 }
 
 module.exports = nextConfig

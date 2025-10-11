@@ -12,8 +12,8 @@
 [functions]
   directory = ".next/server"
 
-# Redirects for API routes
-[[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/:splat"
-  status = 200
+# Redirects for API routes - remove this as it conflicts with Next.js plugin
+# [[redirects]]
+#   from = "/api/*"
+#   to = "/.netlify/functions/:splat"
+#   status = 200
