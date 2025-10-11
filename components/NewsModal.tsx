@@ -48,6 +48,7 @@ export default function NewsModal({ open, item, onClose }: Props) {
         console.log('NewsModal: API response data:', json);
         console.log('NewsModal: paragraphs:', json?.paragraphs);
         console.log('NewsModal: paragraphs content:', json?.paragraphs?.map((p: string, i: number) => `${i}: ${p}`));
+        console.log('NewsModal: paragraphs content details:', json?.paragraphs);
         const paragraphs = Array.isArray(json?.paragraphs) ? json.paragraphs : null;
         console.log('NewsModal: setting paragraphs to:', paragraphs);
         setParas(paragraphs);
@@ -64,11 +65,22 @@ export default function NewsModal({ open, item, onClose }: Props) {
 
   React.useEffect(() => {
     if (!open) return;
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
+    console.log('NewsModal: Setting up keyboard listener and scroll lock');
+    const onKey = (e: KeyboardEvent) => {
+      console.log('NewsModal: Key pressed:', e.key);
+      if (e.key === 'Escape') {
+        console.log('NewsModal: Escape key pressed, closing modal');
+        onClose();
+      }
+    };
     document.addEventListener('keydown', onKey);
     const prev = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
-    return () => { document.removeEventListener('keydown', onKey); document.body.style.overflow = prev; };
+    return () => { 
+      console.log('NewsModal: Cleaning up keyboard listener and scroll lock');
+      document.removeEventListener('keydown', onKey); 
+      document.body.style.overflow = prev; 
+    };
   }, [open, onClose]);
 
   if (!open || !item) return null;
