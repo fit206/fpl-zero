@@ -36,6 +36,7 @@ export default function NewsModal({ open, item, onClose }: Props) {
         const json = await res.json();
         console.log('NewsModal: API response data:', json);
         console.log('NewsModal: paragraphs:', json?.paragraphs);
+        console.log('NewsModal: paragraphs content:', json?.paragraphs?.map((p, i) => `${i}: ${p}`));
         setParas(Array.isArray(json?.paragraphs) ? json.paragraphs : null);
       } catch (error) {
         console.error('NewsModal: API error:', error);
@@ -125,6 +126,7 @@ export default function NewsModal({ open, item, onClose }: Props) {
             {!loading && paras && (
               <>
                 <div className="text-xs text-gray-500">Debug: {paras.length} paragraphs loaded</div>
+                <div className="text-xs text-gray-500">Content: {paras.join(' | ')}</div>
                 {paras.map((p, i) => (<p key={i}>{p}</p>))}
               </>
             )}
