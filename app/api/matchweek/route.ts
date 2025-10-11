@@ -60,7 +60,7 @@ export async function GET(req: NextRequest) {
       predict = null;
 
       // Debug logging
-      console.log(`Fixture ${f.id}: Home team ${th.name} (id: ${th.id}), Away team ${ta.name} (id: ${ta.id})`);
+      console.log(`Fixture: Home team ${th.name} (id: ${th.id}), Away team ${ta.name} (id: ${ta.id})`);
 
       return {
         status: finished ? 'FINISHED' : haveScore ? 'LIVE' : 'UPCOMING',
