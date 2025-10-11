@@ -27,12 +27,17 @@ export default function NewsModal({ open, item, onClose }: Props) {
       setLoading(true); setParas(null);
       try {
         let qs = '';
-        if (item.kind === 'player' || item.kind === 'discipline') qs = `playerId=${(item as any).playerId}`;
-        else if (item.kind === 'team') qs = `teamId=${(item as any).teamId}`;
+        if (item.kind === 'player' || item.kind === 'discipline') qs = `playerId=${item.playerId}`;
+        else if (item.kind === 'team') qs = `teamId=${item.teamId}`;
+        
+        console.log('NewsModal: Fetching expand API with:', qs);
         const res = await fetch(`/api/news/expand?${qs}`, { signal: controller.signal, cache: 'no-store' });
+        console.log('NewsModal: API response status:', res.status);
         const json = await res.json();
+        console.log('NewsModal: API response data:', json);
         setParas(Array.isArray(json?.paragraphs) ? json.paragraphs : null);
-      } catch {
+      } catch (error) {
+        console.error('NewsModal: API error:', error);
         setParas(null);
       } finally {
         setLoading(false);

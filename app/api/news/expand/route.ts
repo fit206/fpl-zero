@@ -23,6 +23,8 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const playerId = Number(searchParams.get('playerId') || '0');
     const teamId = Number(searchParams.get('teamId') || '0');
+    
+    console.log('News expand API: playerId=', playerId, 'teamId=', teamId);
 
     const boot = await getBootstrap();
     const eventId = activeEventId(boot);
