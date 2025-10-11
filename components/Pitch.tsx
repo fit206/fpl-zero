@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import Image from 'next/image';
-import KitImage from '@/components/KitImage';
+import DirectKitImage from '@/components/DirectKitImage';
 
 export type LineupPlayer = {
   id: number;
@@ -100,7 +100,7 @@ function PlayerCard({ p }: { p: LineupPlayer }) {
   return (
     <div className="relative w-[104px]">
       <div className="relative w-[78px] h-[78px] mx-auto rounded-md bg-white/10 border border-white/30 overflow-hidden flex items-center justify-center">
-        <KitImage
+        <DirectKitImage
           role={p.pos === 'GK' ? 'gk' : 'outfield'}
           teamCode={p.teamCode}
           teamId={p.teamId}
