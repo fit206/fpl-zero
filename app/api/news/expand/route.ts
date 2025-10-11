@@ -83,6 +83,7 @@ export async function GET(req: NextRequest) {
         paras.push(`Disiplin: ${discInfo.join(', ')}.`);
       }
 
+      console.log('News expand API: returning paragraphs:', paras);
       return NextResponse.json({ paragraphs: paras }, { status: 200 });
     }
 

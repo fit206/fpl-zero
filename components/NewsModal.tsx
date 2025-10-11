@@ -35,6 +35,7 @@ export default function NewsModal({ open, item, onClose }: Props) {
         console.log('NewsModal: API response status:', res.status);
         const json = await res.json();
         console.log('NewsModal: API response data:', json);
+        console.log('NewsModal: paragraphs:', json?.paragraphs);
         setParas(Array.isArray(json?.paragraphs) ? json.paragraphs : null);
       } catch (error) {
         console.error('NewsModal: API error:', error);
