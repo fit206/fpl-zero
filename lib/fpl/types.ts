@@ -23,6 +23,7 @@ export interface PlayerElement {
   expected_goals_per_90?: string | null;
   expected_assists_per_90?: string | null;
   expected_goal_involvements_per_90?: string | null;
+  selected_by_percent?: string;
 }
 
 export interface Team {
