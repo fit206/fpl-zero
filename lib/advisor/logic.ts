@@ -168,7 +168,7 @@ function toLineupPlayers(
       name: display,
       pos: pos as 'GK' | 'DEF' | 'MID' | 'FWD',
       teamId: pl.team,
-      teamCode: team?.code,
+      teamCode: team?.code || pl.team, // Fallback to teamId if code is missing
       teamShort: team?.short_name || team?.name || 'T',
       position: pk.position ?? 99,
       isCaptain: Boolean(pk.is_captain),
@@ -330,7 +330,7 @@ export async function suggestSingleTransfers(entryId: number, opts?: { event?: '
         name: display,
         pos: pos as 'GK' | 'DEF' | 'MID' | 'FWD',
         teamId: pl.team,
-        teamCode: team?.code,
+        teamCode: team?.code || pl.team, // Fallback to teamId if code is missing
         teamShort: team?.short_name || team?.name || 'T',
         position: pk.position ?? 99,
         isCaptain: Boolean((pk as any).is_captain),
