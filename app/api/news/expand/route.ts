@@ -25,8 +25,10 @@ export async function GET(req: NextRequest) {
     const teamId = Number(url.searchParams.get('teamId') || '0');
     
     console.log('News expand API: playerId=', playerId, 'teamId=', teamId);
+    console.log('News expand API: Starting bootstrap fetch...');
 
     const boot = await getBootstrap();
+    console.log('News expand API: Bootstrap fetched, teams count:', boot.teams.length, 'elements count:', boot.elements.length);
     const eventId = activeEventId(boot);
     const fixtures = await getFixtures(eventId);
 
@@ -113,6 +115,8 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ paragraphs: ['Tiada konteks yang dihantar.'] }, { status: 200 });
   } catch (e) {
     console.error('API /news/expand error', e);
+    console.error('API /news/expand error details:', e);
+    console.error('API /news/expand error stack:', e instanceof Error ? e.stack : 'No stack');
     return NextResponse.json({ 
       paragraphs: [
         'Gagal memuat penerangan lanjut.',
