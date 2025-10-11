@@ -3,7 +3,8 @@ import { suggestSingleTransfers } from '../../../lib/advisor/logic';
 
 export async function GET(req: NextRequest) {
   try {
-    const { searchParams } = new URL(req.url);
+    const url = new URL(req.url);
+    const searchParams = url.searchParams;
     const entryIdStr = searchParams.get('entryId');
     const eventParam = searchParams.get('event'); // 'current' | 'next' | 'number'
 

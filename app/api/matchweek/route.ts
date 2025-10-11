@@ -20,7 +20,8 @@ function fmtTime(d: Date) {
 
 export async function GET(req: NextRequest) {
   try {
-    const { searchParams } = new URL(req.url);
+    const url = new URL(req.url);
+    const searchParams = url.searchParams;
     const eventParam = searchParams.get('event');
     const proParam = searchParams.get('pro');
     const debugParam = searchParams.get('debug');

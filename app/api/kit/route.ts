@@ -70,7 +70,8 @@ function buildCandidates(
 export async function GET(req: NextRequest) {
   try {
     console.log('Kit API route called');
-    const { searchParams } = new URL(req.url);
+    const url = new URL(req.url);
+    const searchParams = url.searchParams;
     const teamCode = Number(searchParams.get('teamCode') || '0');
     const teamId = Number(searchParams.get('teamId') || '0');
     const roleParam = String(searchParams.get('role') || 'outfield').toLowerCase();

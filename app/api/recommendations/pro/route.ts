@@ -4,7 +4,8 @@ import { suggestSingleTransfersPro } from '@/lib/advisor/logic_pro_suggest';
 
 export async function GET(req: NextRequest) {
   try {
-    const { searchParams } = new URL(req.url);
+    const url = new URL(req.url);
+    const searchParams = url.searchParams;
     const entryIdStr = searchParams.get('entryId');
     const eventParam = searchParams.get('event');
 

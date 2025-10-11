@@ -6,9 +6,9 @@ export const revalidate = 30; // Cache 30 saat untuk speed
 
 export async function GET(req: NextRequest) {
   try {
-    const { searchParams } = new URL(req.url);
-    const entryIdStr = searchParams.get('entryId');
-    const eventParam = searchParams.get('event');
+    const url = new URL(req.url);
+    const entryIdStr = url.searchParams.get('entryId');
+    const eventParam = url.searchParams.get('event');
 
     if (!entryIdStr) {
       return NextResponse.json({ error: 'entryId diperlukan' }, { status: 400 });

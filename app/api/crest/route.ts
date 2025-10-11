@@ -13,7 +13,8 @@ function fplByCode(teamCode: number, size: 70 | 50) {
 }
 
 export async function GET(req: NextRequest) {
-  const { searchParams } = new URL(req.url);
+  const url = new URL(req.url);
+  const searchParams = url.searchParams;
   const short = (searchParams.get('short') || '').toUpperCase(); // e.g. 'ARS'
   const teamCode = Number(searchParams.get('teamCode') || '0');  // FPL code
   const size = (Number(searchParams.get('size')) === 50 ? 50 : 70) as 70 | 50;
