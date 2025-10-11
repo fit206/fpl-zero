@@ -269,7 +269,7 @@ export default function Pitch({ lineup, managerName, teamName, entryId }: {
             {bench.map((p, i) => (
               <div key={p.id} className="flex flex-col items-center">
                 <div className="relative w-[56px] h-[56px] md:w-[60px] md:h-[60px] rounded-md bg-white/10 border border-white/30 overflow-hidden flex items-center justify-center">
-                  <KitImage
+                  <DirectKitImage
                     role={p.pos === 'GK' ? 'gk' : 'outfield'}
                     teamCode={p.teamCode}
                     teamId={p.teamId}
