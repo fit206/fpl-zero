@@ -146,7 +146,7 @@ export default function NewsPage() {
     setOpen(true); 
   };
   const closeModal = () => { 
-    console.log('NewsPage: Closing modal');
+    console.log('NewsPage: Closing modal - Stack trace:', new Error().stack);
     setOpen(false); 
     setSelected(null); 
   };
@@ -160,6 +160,7 @@ export default function NewsPage() {
       const res = await fetch(url, { cache: 'no-store' }); // Hanya berita 1 jam terkini
       const json = await res.json();
       if (!res.ok) throw new Error(json?.error || 'Gagal memuat news');
+      console.log('NewsPage: Setting data, current open state:', open);
       setData(json as Resp);
     } catch (e:any) {
       setErr(e?.message || 'Gagal memuat news');
