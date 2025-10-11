@@ -104,6 +104,7 @@ export default function HomePage() {
       const eventParam = proMode ? '' : '&event=next';
       const res = await fetch(`${endpoint}?entryId=${idNum}${eventParam}`);
       const json = await res.json();
+      console.log('HomePage: API response:', json);
       if (!res.ok) {
         setError(json?.error || 'Ralat tidak diketahui.');
       } else {
@@ -117,13 +118,14 @@ export default function HomePage() {
         const dataToSave = {
           suggestions: json.suggestions || [],
           entryId: idNum,
-          managerName: json.managerName,
-          teamName: json.teamName,
+          managerName: json.managerName || 'Unknown Manager',
+          teamName: json.teamName || 'Unknown Team',
           lineup: json.lineup,
           gw: json.gw,
           bank: json.bank
         };
         
+        console.log('HomePage: Saving data to localStorage:', dataToSave);
         localStorage.setItem('transferData', JSON.stringify(dataToSave));
         
         // Trigger storage event for other tabs
