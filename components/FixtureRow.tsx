@@ -18,17 +18,56 @@ export type MatchItem = {
   score: { home: number; away: number } | null;
 };
 
-function Crest({ src, alt }: { src: string; alt: string }) {
-  const [s, setS] = React.useState(src);
-  React.useEffect(() => setS(src), [src]);
+function Crest({ src, alt, teamId }: { src: string; alt: string; teamId?: number }) {
+  const [currentSrc, setCurrentSrc] = React.useState(src);
+  const [hasError, setHasError] = React.useState(false);
+
+  // Build fallback URLs
+  const fallbackUrls = React.useMemo(() => {
+    if (!teamId) return [src];
+    return [
+      src,
+      `https://resources.premierleague.com/premierleague/badges/50/t${teamId}.png`,
+      `https://resources.premierleague.com/premierleague/badges/110/t${teamId}.png`,
+      '/crests/fallback.svg'
+    ];
+  }, [src, teamId]);
+
+  const [urlIndex, setUrlIndex] = React.useState(0);
+
+  React.useEffect(() => {
+    setCurrentSrc(src);
+    setHasError(false);
+    setUrlIndex(0);
+  }, [src]);
+
+  const handleError = () => {
+    console.log(`Crest error for ${alt}: ${currentSrc}`);
+    if (urlIndex < fallbackUrls.length - 1) {
+      setUrlIndex(urlIndex + 1);
+      setCurrentSrc(fallbackUrls[urlIndex + 1]);
+    } else {
+      setHasError(true);
+    }
+  };
+
+  if (hasError) {
+    return (
+      <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-md bg-gray-200 border border-slate-200 flex items-center justify-center overflow-hidden shadow-sm">
+        <span className="text-xs font-bold text-gray-600">{alt.charAt(0)}</span>
+      </div>
+    );
+  }
+
   return (
     <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-md bg-white border border-slate-200 flex items-center justify-center overflow-hidden shadow-sm">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src={s}
+        src={currentSrc}
         alt={alt}
         className="w-4 h-4 sm:w-5 sm:h-5 object-contain"
-        onError={() => setS('/crests/fallback.svg')}
+        onError={handleError}
+        onLoad={() => setHasError(false)}
       />
     </div>
   );
@@ -67,7 +106,7 @@ export default function FixtureRow({ item }: { item: MatchItem }) {
           <span className="sm:hidden">{item.home.short}</span>
           <span className="hidden sm:inline">{item.home.name}</span>
         </div>
-        <Crest src={item.home.crest || `/crests/fallback.svg`} alt={item.home.short} />
+        <Crest src={item.home.crest || `/crests/fallback.svg`} alt={item.home.short} teamId={item.home.id} />
       </div>
 
       {/* Middle */}
@@ -75,7 +114,7 @@ export default function FixtureRow({ item }: { item: MatchItem }) {
 
       {/* Away */}
       <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
-        <Crest src={item.away.crest || `/crests/fallback.svg`} alt={item.away.short} />
+        <Crest src={item.away.crest || `/crests/fallback.svg`} alt={item.away.short} teamId={item.away.id} />
         <div className="font-medium truncate text-slate-900 text-xs sm:text-sm">
           <span className="sm:hidden">{item.away.short}</span>
           <span className="hidden sm:inline">{item.away.name}</span>
