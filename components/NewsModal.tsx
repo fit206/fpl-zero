@@ -20,6 +20,15 @@ export default function NewsModal({ open, item, onClose }: Props) {
   const [loading, setLoading] = React.useState(false);
   
   console.log('NewsModal render: open=', open, 'item=', item, 'paras=', paras, 'loading=', loading);
+  
+  // Debug state changes
+  React.useEffect(() => {
+    console.log('NewsModal: paras state changed to:', paras);
+  }, [paras]);
+  
+  React.useEffect(() => {
+    console.log('NewsModal: loading state changed to:', loading);
+  }, [loading]);
 
   React.useEffect(() => {
     if (!open || !item) return;
@@ -39,7 +48,9 @@ export default function NewsModal({ open, item, onClose }: Props) {
         console.log('NewsModal: API response data:', json);
         console.log('NewsModal: paragraphs:', json?.paragraphs);
         console.log('NewsModal: paragraphs content:', json?.paragraphs?.map((p, i) => `${i}: ${p}`));
-        setParas(Array.isArray(json?.paragraphs) ? json.paragraphs : null);
+        const paragraphs = Array.isArray(json?.paragraphs) ? json.paragraphs : null;
+        console.log('NewsModal: setting paragraphs to:', paragraphs);
+        setParas(paragraphs);
       } catch (error) {
         console.error('NewsModal: API error:', error);
         setParas(null);
@@ -129,6 +140,7 @@ export default function NewsModal({ open, item, onClose }: Props) {
               <>
                 <div className="text-xs text-gray-500">Debug: {paras.length} paragraphs loaded</div>
                 <div className="text-xs text-gray-500">Content: {paras.join(' | ')}</div>
+                <div className="text-xs text-gray-500">Rendering condition: !loading={!loading} && paras={!!paras}</div>
                 {paras.map((p, i) => (<p key={i}>{p}</p>))}
               </>
             )}
