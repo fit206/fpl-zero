@@ -122,8 +122,6 @@ export default function NewsModal({ open, item, onClose }: Props) {
     : item.tag === 'penggantungan' ? 'bg-rose-50 text-rose-800 ring-rose-200'
     : 'bg-sky-50 text-sky-800 ring-sky-200';
 
-  console.log('NewsModal: Rendering modal with open=', open, 'item=', item, 'paras=', paras);
-  
   return (
     <div className="fixed inset-0 z-[100]" style={{ display: open ? 'block' : 'none' }}>
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={(e) => {
@@ -167,9 +165,6 @@ export default function NewsModal({ open, item, onClose }: Props) {
             {loading && <div className="text-slate-500">Memuat penerangan lanjut…</div>}
             {!loading && paras && (
               <>
-                <div className="text-xs text-gray-500">Debug: {paras.length} paragraphs loaded</div>
-                <div className="text-xs text-gray-500">Content: {paras.join(' | ')}</div>
-                <div className="text-xs text-gray-500">Rendering condition: !loading={!loading} && paras={!!paras}</div>
                 {paras.map((p, i) => (<p key={i}>{p}</p>))}
               </>
             )}
