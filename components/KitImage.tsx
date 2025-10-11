@@ -27,12 +27,35 @@ export default function KitImage({
   ];
 
   const [idx, setIdx] = React.useState(0);
+  const [hasError, setHasError] = React.useState(false);
 
   React.useEffect(() => {
     setIdx(0);
+    setHasError(false);
   }, [teamCode, teamId, size, role]);
 
   const src = paths[Math.min(idx, paths.length - 1)];
+
+  const handleError = () => {
+    console.log(`KitImage error for teamCode=${teamCode}, teamId=${teamId}, role=${role}, idx=${idx}`);
+    if (idx < paths.length - 1) {
+      setIdx(idx + 1);
+    } else {
+      setHasError(true);
+    }
+  };
+
+  if (hasError) {
+    // Fallback: show team code or a placeholder
+    return (
+      <div 
+        className={`${className} flex items-center justify-center bg-gray-200 text-gray-600 text-xs font-bold`}
+        style={{ width: size, height: size }}
+      >
+        {teamCode || '?'}
+      </div>
+    );
+  }
 
   return (
     // eslint-disable-next-line @next/next/no-img-element
@@ -40,9 +63,8 @@ export default function KitImage({
       src={src}
       alt={alt || 'kit'}
       className={className}
-      onError={() => {
-        if (idx < paths.length - 1) setIdx(idx + 1);
-      }}
+      onError={handleError}
+      onLoad={() => setHasError(false)}
     />
   );
 }

@@ -82,7 +82,12 @@ export async function GET(req: NextRequest) {
 
   for (const url of candidates) {
     try {
-      const res = await fetch(url, { headers: UA, next: { revalidate: 60 * 60 * 24 } });
+      const res = await fetch(url, { 
+        headers: UA, 
+        next: { revalidate: 60 * 60 * 24 },
+        // Add timeout to prevent hanging
+        signal: AbortSignal.timeout(5000)
+      });
       if (res.ok) {
         const buf = await res.arrayBuffer();
         const ct = res.headers.get('content-type') || 'image/png';
@@ -91,14 +96,26 @@ export async function GET(req: NextRequest) {
           headers: {
             'Content-Type': ct,
             'Cache-Control': 'public, s-maxage=86400, stale-while-revalidate=604800',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET',
+            'Access-Control-Allow-Headers': 'Content-Type',
           },
         });
       }
-    } catch {
+    } catch (error) {
+      console.log(`Failed to fetch ${url}:`, error);
       // cuba yang seterusnya
     }
   }
 
-  // Tiada calon berjaya
-  return new Response(null, { status: 204 });
+  // Tiada calon berjaya - return a transparent 1x1 pixel
+  const transparentPixel = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==';
+  return new Response(transparentPixel, {
+    status: 200,
+    headers: {
+      'Content-Type': 'image/png',
+      'Cache-Control': 'public, s-maxage=3600',
+      'Access-Control-Allow-Origin': '*',
+    },
+  });
 }
