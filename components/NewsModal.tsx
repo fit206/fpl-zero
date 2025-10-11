@@ -122,8 +122,10 @@ export default function NewsModal({ open, item, onClose }: Props) {
     : item.tag === 'penggantungan' ? 'bg-rose-50 text-rose-800 ring-rose-200'
     : 'bg-sky-50 text-sky-800 ring-sky-200';
 
+  console.log('NewsModal: Rendering modal with open=', open, 'item=', item, 'paras=', paras);
+  
   return (
-    <div className="fixed inset-0 z-[100]">
+    <div className="fixed inset-0 z-[100]" style={{ display: open ? 'block' : 'none' }}>
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={(e) => {
         console.log('NewsModal: Backdrop clicked, closing modal');
         onClose();
