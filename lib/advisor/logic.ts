@@ -38,8 +38,15 @@ export const minutesProb = (player: PlayerElement): number => {
 
 export const posShort = (elementType: number, elementTypes: Bootstrap['element_types']): string => {
   const type = elementTypes.find(et => et.id === elementType);
-  const pos = type?.singular_name_short || 'UNK';
-  console.log(`posShort: elementType=${elementType}, pos=${pos}, type=`, type);
+  let pos = type?.singular_name_short || 'UNK';
+  
+  // Fix common FPL position mapping issues
+  if (pos === 'GKP' || pos === 'Goalkeeper') pos = 'GK';
+  if (pos === 'Defender') pos = 'DEF';
+  if (pos === 'Midfielder') pos = 'MID';
+  if (pos === 'Forward') pos = 'FWD';
+  
+  console.log(`posShort: elementType=${elementType}, original=${type?.singular_name_short}, mapped=${pos}, type=`, type);
   return pos;
 };
 
