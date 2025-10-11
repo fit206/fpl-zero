@@ -47,7 +47,7 @@ export default function NewsModal({ open, item, onClose }: Props) {
         const json = await res.json();
         console.log('NewsModal: API response data:', json);
         console.log('NewsModal: paragraphs:', json?.paragraphs);
-        console.log('NewsModal: paragraphs content:', json?.paragraphs?.map((p, i) => `${i}: ${p}`));
+        console.log('NewsModal: paragraphs content:', json?.paragraphs?.map((p: string, i: number) => `${i}: ${p}`));
         const paragraphs = Array.isArray(json?.paragraphs) ? json.paragraphs : null;
         console.log('NewsModal: setting paragraphs to:', paragraphs);
         setParas(paragraphs);
