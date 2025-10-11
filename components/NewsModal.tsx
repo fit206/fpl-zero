@@ -18,6 +18,8 @@ type Props = { open: boolean; item: NewsItem | null; onClose: () => void; };
 export default function NewsModal({ open, item, onClose }: Props) {
   const [paras, setParas] = React.useState<string[] | null>(null);
   const [loading, setLoading] = React.useState(false);
+  
+  console.log('NewsModal render: open=', open, 'item=', item, 'paras=', paras, 'loading=', loading);
 
   React.useEffect(() => {
     if (!open || !item) return;
