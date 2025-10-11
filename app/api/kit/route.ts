@@ -68,6 +68,7 @@ function buildCandidates(
 }
 
 export async function GET(req: NextRequest) {
+  console.log('Kit API route called');
   const { searchParams } = new URL(req.url);
   const teamCode = Number(searchParams.get('teamCode') || '0');
   const teamId = Number(searchParams.get('teamId') || '0');
@@ -122,3 +123,6 @@ export async function GET(req: NextRequest) {
     },
   });
 }
+
+// Export all HTTP methods
+export { GET as POST, GET as PUT, GET as DELETE, GET as PATCH };
