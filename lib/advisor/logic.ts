@@ -38,7 +38,9 @@ export const minutesProb = (player: PlayerElement): number => {
 
 export const posShort = (elementType: number, elementTypes: Bootstrap['element_types']): string => {
   const type = elementTypes.find(et => et.id === elementType);
-  return type?.singular_name_short || 'UNK';
+  const pos = type?.singular_name_short || 'UNK';
+  console.log(`posShort: elementType=${elementType}, pos=${pos}, type=`, type);
+  return pos;
 };
 
 export const nextGwFdrs = (fixtures: Fixture[], teamId: number): number[] => {

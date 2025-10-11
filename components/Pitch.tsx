@@ -151,6 +151,13 @@ export default function Pitch({ lineup, managerName, teamName, entryId }: {
   const mid = starters.filter((p) => p.pos === 'MID');
   const fwd = starters.filter((p) => p.pos === 'FWD');
 
+  // Debug logging
+  console.log('Pitch debug - starters:', starters.length);
+  console.log('Pitch debug - GK:', gk.length, gk);
+  console.log('Pitch debug - DEF:', def.length);
+  console.log('Pitch debug - MID:', mid.length);
+  console.log('Pitch debug - FWD:', fwd.length);
+
   const cap = starters.find((p) => p.isCaptain);
 
   const { ref, scale } = useScale(BASE_W);
