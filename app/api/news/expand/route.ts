@@ -91,11 +91,17 @@ export async function GET(req: NextRequest) {
         home = f.team_h === p.team;
         if (homeTeam && awayTeam) {
           try {
-            const smart = await predictSmart({ home: homeTeam, away: awayTeam, boot });
+            const smart = await predictSmart({ home: homeTeam, away: awayTeam, boot, fixture: f });
             lamTeam = home ? smart.lambdas.home : smart.lambdas.away;
             lamOpp  = home ? smart.lambdas.away : smart.lambdas.home;
             csPct = Math.exp(-lamOpp) * 100;
-          } catch {}
+          } catch (error) {
+            console.error('predictSmart error in news expand:', error);
+            // Fallback values
+            lamTeam = 1.25;
+            lamOpp = 1.15;
+            csPct = Math.exp(-lamOpp) * 100;
+          }
         }
       }
 
@@ -250,6 +256,12 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ paragraphs: ['Tiada konteks yang dihantar.'] }, { status: 200 });
   } catch (e) {
     console.error('API /news/expand error', e);
-    return NextResponse.json({ paragraphs: ['Gagal memuat penerangan lanjut.'] }, { status: 200 });
+    return NextResponse.json({ 
+      paragraphs: [
+        'Gagal memuat penerangan lanjut.',
+        'Sila cuba lagi dalam beberapa minit.',
+        'Jika masalah berterusan, sila hubungi support.'
+      ] 
+    }, { status: 200 });
   }
 }
