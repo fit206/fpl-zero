@@ -122,7 +122,12 @@ export default function NewsModal({ open, item, onClose }: Props) {
           {/* Penerangan panjang */}
           <div className="mt-3 space-y-3 text-[14px] leading-relaxed text-slate-800">
             {loading && <div className="text-slate-500">Memuat penerangan lanjut…</div>}
-            {!loading && paras && paras.map((p, i) => (<p key={i}>{p}</p>))}
+            {!loading && paras && (
+              <>
+                <div className="text-xs text-gray-500">Debug: {paras.length} paragraphs loaded</div>
+                {paras.map((p, i) => (<p key={i}>{p}</p>))}
+              </>
+            )}
             {!loading && !paras && (
               <>
                 <p>Butiran penuh tidak tersedia buat masa ini.</p>
