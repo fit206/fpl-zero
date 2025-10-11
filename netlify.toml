@@ -7,3 +7,7 @@
 
 [build.environment]
   NODE_VERSION = "18"
+
+# Enable serverless functions
+[functions]
+  directory = ".next/server"

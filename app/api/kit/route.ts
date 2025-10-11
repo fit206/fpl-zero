@@ -68,21 +68,22 @@ function buildCandidates(
 }
 
 export async function GET(req: NextRequest) {
-  console.log('Kit API route called');
-  const { searchParams } = new URL(req.url);
-  const teamCode = Number(searchParams.get('teamCode') || '0');
-  const teamId = Number(searchParams.get('teamId') || '0');
-  const roleParam = String(searchParams.get('role') || 'outfield').toLowerCase();
-  const role = (roleParam === 'gk' ? 'gk' : roleParam === 'crest' ? 'crest' : 'outfield') as
-    | 'gk'
-    | 'outfield'
-    | 'crest';
-  const size = (Number(searchParams.get('size')) === 66 ? 66 : 110) as 110 | 66;
+  try {
+    console.log('Kit API route called');
+    const { searchParams } = new URL(req.url);
+    const teamCode = Number(searchParams.get('teamCode') || '0');
+    const teamId = Number(searchParams.get('teamId') || '0');
+    const roleParam = String(searchParams.get('role') || 'outfield').toLowerCase();
+    const role = (roleParam === 'gk' ? 'gk' : roleParam === 'crest' ? 'crest' : 'outfield') as
+      | 'gk'
+      | 'outfield'
+      | 'crest';
+    const size = (Number(searchParams.get('size')) === 66 ? 66 : 110) as 110 | 66;
 
-  console.log(`Kit API called: teamCode=${teamCode}, teamId=${teamId}, role=${role}, size=${size}`);
+    console.log(`Kit API called: teamCode=${teamCode}, teamId=${teamId}, role=${role}, size=${size}`);
 
-  const candidates = buildCandidates(teamCode, teamId, size, role);
-  console.log(`Candidates:`, candidates);
+    const candidates = buildCandidates(teamCode, teamId, size, role);
+    console.log(`Candidates:`, candidates);
 
   for (const url of candidates) {
     try {
@@ -122,6 +123,16 @@ export async function GET(req: NextRequest) {
       'Access-Control-Allow-Origin': '*',
     },
   });
+  } catch (error) {
+    console.error('Kit API error:', error);
+    return new Response(JSON.stringify({ error: 'Internal server error' }), {
+      status: 500,
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      },
+    });
+  }
 }
 
 // Export all HTTP methods
