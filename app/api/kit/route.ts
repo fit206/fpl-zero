@@ -1,0 +1,104 @@
+// app/api/kit/route.ts
+import { NextRequest } from 'next/server';
+
+const UA = { 'User-Agent': 'Mozilla/5.0' };
+
+function buildCandidates(
+  teamCode: number,
+  teamId: number,
+  size: 110 | 66,
+  role: 'gk' | 'outfield' | 'crest'
+): string[] {
+  const urls: string[] = [];
+  const base = 'https://fantasy.premierleague.com/dist/img/shirts/standard';
+  const crest = `https://resources.premierleague.com/premierleague/badges/70/t${teamId}.png`;
+
+  if (role === 'gk') {
+    // 1) GK kit (varian _1). Cuba size diminta, kemudian 66
+    if (teamCode > 0) {
+      urls.push(
+        `${base}/shirt_${teamCode}_1-${size}.png`,
+        `${base}/shirt_${teamCode}_1-66.png`,
+      );
+    }
+    // 2) Outfield fallback
+    if (teamCode > 0) {
+      urls.push(
+        `${base}/shirt_${teamCode}-${size}.png`,
+        `${base}/shirt_${teamCode}-66.png`,
+      );
+    }
+    // 3) Crest fallback
+    if (teamId > 0) urls.push(crest);
+    return urls;
+  }
+
+  if (role === 'outfield') {
+    if (teamCode > 0) {
+      urls.push(
+        `${base}/shirt_${teamCode}-${size}.png`,
+        `${base}/shirt_${teamCode}-66.png`
+      );
+    }
+    if (teamId > 0) urls.push(crest);
+    return urls;
+  }
+
+  // role === 'crest'
+  if (teamCode > 0) {
+    // cuba beberapa varian FPL badges (ada musim guna - dan ada juga _)
+    urls.push(
+      `https://fantasy.premierleague.com/dist/img/badges/badge_${teamCode}-70.png`,
+      `https://fantasy.premierleague.com/dist/img/badges/badge_${teamCode}_70.png`,
+      `https://fantasy.premierleague.com/dist/img/badges/${teamCode}.png`,
+      // cuba varian lain yang mungkin
+      `https://fantasy.premierleague.com/dist/img/badges/badge_${teamCode}-110.png`,
+      `https://fantasy.premierleague.com/dist/img/badges/badge_${teamCode}_110.png`
+    );
+  }
+  if (teamId > 0) {
+    // crest Premier League (fallback)
+    urls.push(crest);
+    // cuba varian lain Premier League
+    urls.push(`https://resources.premierleague.com/premierleague/badges/110/t${teamId}.png`);
+  }
+  
+  // JANGAN guna shirt sebagai fallback untuk crest - biarkan kosong jika tiada logo
+  return urls;
+}
+
+export async function GET(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+  const teamCode = Number(searchParams.get('teamCode') || '0');
+  const teamId = Number(searchParams.get('teamId') || '0');
+  const roleParam = String(searchParams.get('role') || 'outfield').toLowerCase();
+  const role = (roleParam === 'gk' ? 'gk' : roleParam === 'crest' ? 'crest' : 'outfield') as
+    | 'gk'
+    | 'outfield'
+    | 'crest';
+  const size = (Number(searchParams.get('size')) === 66 ? 66 : 110) as 110 | 66;
+
+  const candidates = buildCandidates(teamCode, teamId, size, role);
+
+  for (const url of candidates) {
+    try {
+      const res = await fetch(url, { headers: UA, next: { revalidate: 60 * 60 * 24 } });
+      if (res.ok) {
+        const buf = await res.arrayBuffer();
+        const ct = res.headers.get('content-type') || 'image/png';
+        return new Response(buf, {
+          status: 200,
+          headers: {
+            'Content-Type': ct,
+            'Cache-Control': 'public, s-maxage=86400, stale-while-revalidate=604800',
+          },
+        });
+      }
+    } catch {
+      // cuba yang seterusnya
+    }
+  }
+
+  // Tiada calon berjaya
+  return new Response(null, { status: 204 });
+}
