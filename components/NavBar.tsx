@@ -10,7 +10,6 @@ const baseLinks = [
   { href: '/', label: 'Utama' },
   { href: '/fixtures', label: 'Jadual' },
   { href: '/captain', label: 'Kapten' },
-  { href: '/news', label: 'News' },
 ];
 
 const transferLink = { href: '/transfer', label: 'Transfer' };
