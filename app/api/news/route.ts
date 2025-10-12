@@ -42,10 +42,21 @@ export async function GET() {
 
         // Filter news for FPL-relevant content (injuries, cards, transfers) - STRICT FILTERING
         const fplKeywords = [
-          'injury', 'injured', 'suspension', 'suspended', 'card', 'yellow', 'red', 'transfer', 'signing', 'loan',
-          'hamstring', 'knee', 'ankle', 'muscle', 'strain', 'fracture', 'concussion', 'ban', 'disciplinary', 
+          // Kecederaan pemain
+          'injury', 'injured', 'hamstring', 'knee', 'ankle', 'muscle', 'strain', 'fracture', 'concussion',
           'ruled out', 'doubtful', 'fitness', 'recovery', 'return', 'absence', 'miss', 'unavailable', 'doubt', 
-          'questionable', 'out', 'fpl', 'fantasy', 'points', 'clean sheet', 'assist', 'goal', 'penalty'
+          'questionable', 'out', 'medical', 'treatment', 'surgery', 'rehabilitation', 'physio', 'scan',
+          
+          // Kad kuning/merah dan suspensi
+          'suspension', 'suspended', 'card', 'yellow', 'red', 'ban', 'disciplinary', 'booking', 'sent off',
+          'dismissal', 'ejection', 'caution', 'warning', 'foul', 'tackle', 'challenge', 'referee',
+          
+          // Transfer pemain
+          'transfer', 'signing', 'loan', 'contract', 'deal', 'agreement', 'move', 'switch', 'join', 'leave',
+          'departure', 'arrival', 'recruitment', 'acquisition', 'release', 'termination', 'extension',
+          
+          // FPL specific
+          'fpl', 'fantasy', 'points', 'clean sheet', 'assist', 'goal', 'penalty', 'captain', 'vice-captain'
         ];
         
         const filteredItems = items.filter((item: any) => {
@@ -54,7 +65,12 @@ export async function GET() {
           const isFPLRelevant = fplKeywords.some(keyword => title.includes(keyword) || description.includes(keyword));
           
           // Skip general football news that's not FPL-relevant
-          const skipKeywords = ['match', 'game', 'result', 'score', 'win', 'lose', 'draw', 'league', 'table', 'season'];
+          const skipKeywords = [
+            'match', 'game', 'result', 'score', 'win', 'lose', 'draw', 'league', 'table', 'season',
+            'fixture', 'schedule', 'kick-off', 'kickoff', 'stadium', 'attendance', 'crowd', 'fans',
+            'trophy', 'cup', 'championship', 'title', 'winner', 'loser', 'final', 'semi-final',
+            'manager', 'coach', 'tactics', 'formation', 'lineup', 'starting eleven', 'substitute'
+          ];
           const shouldSkip = skipKeywords.some(keyword => title.includes(keyword) || description.includes(keyword));
           
           if (isFPLRelevant && !shouldSkip) {
