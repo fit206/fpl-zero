@@ -41,30 +41,6 @@ export async function GET() {
           continue;
         }
 
-               // Filter news for FPL-relevant content (injuries, cards, transfers) - ULTRA STRICT FILTERING
-               const fplKeywords = [
-                 // Kecederaan pemain - ULTRA STRICT
-                 'injury', 'injured', 'hamstring', 'knee', 'ankle', 'muscle', 'strain', 'fracture', 'concussion',
-                 'ruled out', 'doubtful', 'fitness', 'recovery', 'return', 'absence', 'miss', 'unavailable', 'doubt',
-                 'questionable', 'out', 'medical', 'treatment', 'surgery', 'rehabilitation', 'physio', 'scan',
-                 'knocked out', 'knock', 'blow', 'head injury', 'leg injury', 'arm injury', 'back injury',
-                 'broken', 'sprain', 'tear', 'pull', 'twist', 'dislocation', 'bruise', 'cut', 'wound',
-
-                 // Kad kuning/merah dan suspensi - ULTRA STRICT
-                 'suspension', 'suspended', 'card', 'yellow', 'red', 'ban', 'disciplinary', 'booking', 'sent off',
-                 'dismissal', 'ejection', 'caution', 'warning', 'foul', 'tackle', 'challenge', 'referee',
-                 'red card', 'yellow card', 'straight red', 'second yellow', 'accumulation', 'accumulated',
-                 'expelled', 'ejected', 'dismissed', 'banned', 'penalty', 'sanction', 'punishment',
-
-                 // Transfer pemain EPL - ULTRA STRICT
-                 'transfer', 'signing', 'loan', 'contract', 'deal', 'agreement', 'move', 'switch', 'join', 'leave',
-                 'departure', 'arrival', 'recruitment', 'acquisition', 'release', 'termination', 'extension',
-                 'premier league', 'epl', 'manchester', 'united', 'city', 'liverpool', 'chelsea', 'arsenal', 
-                 'tottenham', 'newcastle', 'brighton', 'everton', 'fulham', 'crystal', 'palace', 'west', 'ham', 
-                 'wolves', 'bournemouth', 'brentford', 'burnley', 'leicester', 'leeds', 'southampton', 
-                 'nottingham', 'forest', 'villa', 'sheffield', 'luton', 'ipswich',
-                 'signed', 'joins', 'leaves', 'departs', 'arrives', 'recruited', 'acquired', 'released'
-               ];
         
         // ULTRA STRICT FILTERING: Only show injuries, cards, and transfers
         const filteredItems = items.filter((item: any) => {
