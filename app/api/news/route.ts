@@ -71,6 +71,10 @@ export async function GET() {
           const description = (item.description || "").toLowerCase();
           const isFPLRelevant = fplKeywords.some(keyword => title.includes(keyword) || description.includes(keyword));
           
+          // Debug logging
+          console.log(`🔍 Checking: "${title.substring(0, 50)}..."`);
+          console.log(`   FPL Relevant: ${isFPLRelevant}`);
+          
           // Skip general football news that's not FPL-relevant - ULTRA STRICT FILTERING
           const skipKeywords = [
             // General football content (not FPL-specific)
@@ -145,8 +149,13 @@ export async function GET() {
           ];
           const shouldSkip = skipKeywords.some(keyword => title.includes(keyword) || description.includes(keyword));
           
+          // ULTRA STRICT: Only show if it's FPL-relevant AND not in skip list
           if (isFPLRelevant && !shouldSkip) {
-            console.log(`FPL-relevant news found: ${title.substring(0, 50)}...`);
+            console.log(`✅ FPL-relevant news found: ${title.substring(0, 50)}...`);
+          } else if (shouldSkip) {
+            console.log(`❌ Skipped non-FPL content: ${title.substring(0, 50)}...`);
+          } else {
+            console.log(`❌ Not FPL-relevant: ${title.substring(0, 50)}...`);
           }
           
           return isFPLRelevant && !shouldSkip;
