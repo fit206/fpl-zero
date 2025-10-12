@@ -41,46 +41,77 @@ export async function GET() {
           continue;
         }
 
-        // Filter news for FPL-relevant content (injuries, cards, transfers) - RELAXED FILTERING
-        const fplKeywords = [
-          // Kecederaan pemain
-          'injury', 'injured', 'hamstring', 'knee', 'ankle', 'muscle', 'strain', 'fracture', 'concussion',
-          'ruled out', 'doubtful', 'fitness', 'recovery', 'return', 'absence', 'miss', 'unavailable', 'doubt', 
-          'questionable', 'out', 'medical', 'treatment', 'surgery', 'rehabilitation', 'physio', 'scan',
-          
-          // Kad kuning/merah dan suspensi
-          'suspension', 'suspended', 'card', 'yellow', 'red', 'ban', 'disciplinary', 'booking', 'sent off',
-          'dismissal', 'ejection', 'caution', 'warning', 'foul', 'tackle', 'challenge', 'referee',
-          
-          // Transfer pemain
-          'transfer', 'signing', 'loan', 'contract', 'deal', 'agreement', 'move', 'switch', 'join', 'leave',
-          'departure', 'arrival', 'recruitment', 'acquisition', 'release', 'termination', 'extension',
-          
-          // FPL specific
-          'fpl', 'fantasy', 'points', 'clean sheet', 'assist', 'goal', 'penalty', 'captain', 'vice-captain',
-          
-          // General football terms for Football365
-          'manchester', 'united', 'city', 'liverpool', 'chelsea', 'arsenal', 'tottenham', 'newcastle',
-          'brighton', 'everton', 'fulham', 'crystal', 'palace', 'west', 'ham', 'wolves', 'bournemouth',
-          'brentford', 'burnley', 'leicester', 'leeds', 'southampton', 'nottingham', 'forest', 'villa',
-          
-          // More general terms
-          'premier', 'league', 'football', 'soccer', 'player', 'team', 'club', 'manager', 'coach',
-          'game', 'match', 'season', 'win', 'lose', 'draw', 'score', 'goal', 'assist', 'clean',
-          'sheet', 'defender', 'midfielder', 'forward', 'striker', 'goalkeeper', 'keeper'
-        ];
+               // Filter news for FPL-relevant content (injuries, cards, transfers) - STRICT FILTERING
+               const fplKeywords = [
+                 // Kecederaan pemain - STRICT
+                 'injury', 'injured', 'hamstring', 'knee', 'ankle', 'muscle', 'strain', 'fracture', 'concussion',
+                 'ruled out', 'doubtful', 'fitness', 'recovery', 'return', 'absence', 'miss', 'unavailable', 'doubt',
+                 'questionable', 'out', 'medical', 'treatment', 'surgery', 'rehabilitation', 'physio', 'scan',
+                 'knocked out', 'knock', 'blow', 'head injury', 'leg injury', 'arm injury', 'back injury',
+
+                 // Kad kuning/merah dan suspensi - STRICT
+                 'suspension', 'suspended', 'card', 'yellow', 'red', 'ban', 'disciplinary', 'booking', 'sent off',
+                 'dismissal', 'ejection', 'caution', 'warning', 'foul', 'tackle', 'challenge', 'referee',
+                 'red card', 'yellow card', 'straight red', 'second yellow', 'accumulation', 'accumulated',
+
+                 // Transfer pemain EPL - STRICT
+                 'transfer', 'signing', 'loan', 'contract', 'deal', 'agreement', 'move', 'switch', 'join', 'leave',
+                 'departure', 'arrival', 'recruitment', 'acquisition', 'release', 'termination', 'extension',
+                 'premier league', 'epl', 'manchester', 'united', 'city', 'liverpool', 'chelsea', 'arsenal', 
+                 'tottenham', 'newcastle', 'brighton', 'everton', 'fulham', 'crystal', 'palace', 'west', 'ham', 
+                 'wolves', 'bournemouth', 'brentford', 'burnley', 'leicester', 'leeds', 'southampton', 
+                 'nottingham', 'forest', 'villa', 'sheffield', 'luton', 'ipswich'
+               ];
         
         const filteredItems = items.filter((item: any) => {
           const title = (item.title || "").toLowerCase();
           const description = (item.description || "").toLowerCase();
           const isFPLRelevant = fplKeywords.some(keyword => title.includes(keyword) || description.includes(keyword));
           
-          // Skip general football news that's not FPL-relevant
+          // Skip general football news that's not FPL-relevant - STRICT FILTERING
           const skipKeywords = [
-            'match', 'game', 'result', 'score', 'win', 'lose', 'draw', 'league', 'table', 'season',
-            'fixture', 'schedule', 'kick-off', 'kickoff', 'stadium', 'attendance', 'crowd', 'fans',
-            'trophy', 'cup', 'championship', 'title', 'winner', 'loser', 'final', 'semi-final',
-            'manager', 'coach', 'tactics', 'formation', 'lineup', 'starting eleven', 'substitute'
+            // General football content (not FPL-specific)
+            'match', 'score', 'result', 'win', 'lose', 'draw', 'victory', 'defeat', 'game', 'fixture',
+            'highlights', 'recap', 'review', 'analysis', 'tactics', 'formation', 'strategy',
+            'championship', 'cup', 'trophy', 'final', 'semi-final', 'quarter-final', 'playoff',
+            'international', 'world cup', 'euro', 'champions league', 'europa league', 'nations league',
+            'friendly', 'pre-season', 'training', 'practice', 'session', 'camp',
+            
+            // Non-FPL content
+            'quiz', 'guess', 'play', 'game', 'entertainment', 'fun', 'trivia', 'history',
+            'legends', 'retro', 'vintage', 'classic', 'memories', 'throwback',
+            'women', 'female', 'girls', 'ladies', 'womens', 'womens football',
+            'youth', 'academy', 'development', 'under-21', 'under-19', 'reserves',
+            'community', 'charity', 'foundation', 'outreach', 'social',
+            'technology', 'var', 'referee', 'officials', 'rules', 'regulations',
+            'stadium', 'ground', 'venue', 'facilities', 'infrastructure',
+            'business', 'finance', 'money', 'revenue', 'sponsorship', 'commercial',
+            'media', 'journalism', 'interview', 'press', 'conference', 'statement',
+            'rumours', 'gossip', 'speculation', 'reports', 'sources', 'insider',
+            'opinion', 'editorial', 'column', 'blog', 'article', 'feature',
+            'statistics', 'data', 'analytics', 'metrics', 'performance', 'stats',
+            'weather', 'climate', 'pitch', 'surface', 'grass', 'artificial',
+            'travel', 'journey', 'trip', 'tour', 'visit', 'away', 'home',
+            'celebration', 'party', 'festival', 'event', 'ceremony', 'awards',
+            'documentary', 'film', 'movie', 'video', 'series', 'show',
+            'podcast', 'radio', 'tv', 'television', 'broadcast', 'streaming',
+            'social media', 'twitter', 'instagram', 'facebook', 'tiktok', 'youtube',
+            'fashion', 'style', 'clothing', 'kit', 'jersey', 'shirt', 'boots',
+            'food', 'drink', 'restaurant', 'cafe', 'bar', 'pub', 'hotel',
+            'music', 'song', 'anthem', 'hymn', 'chant', 'song', 'lyrics',
+            'art', 'design', 'logo', 'brand', 'identity', 'crest', 'badge',
+            'education', 'school', 'university', 'college', 'degree', 'course',
+            'health', 'wellness', 'fitness', 'exercise', 'training', 'gym',
+            'lifestyle', 'culture', 'tradition', 'heritage', 'custom', 'ritual',
+            'politics', 'government', 'policy', 'law', 'legal', 'court', 'justice',
+            'economy', 'market', 'investment', 'stock', 'shares', 'trading',
+            'science', 'research', 'study', 'experiment', 'innovation', 'technology',
+            'environment', 'sustainability', 'green', 'eco', 'carbon', 'climate',
+            'society', 'community', 'public', 'citizen', 'democracy', 'rights',
+            'religion', 'faith', 'belief', 'church', 'temple', 'mosque', 'synagogue',
+            'philosophy', 'ethics', 'morality', 'values', 'principles', 'ideals',
+            'psychology', 'mental', 'emotional', 'behavior', 'personality', 'character',
+            'sociology', 'anthropology', 'history', 'geography', 'demographics', 'statistics'
           ];
           const shouldSkip = skipKeywords.some(keyword => title.includes(keyword) || description.includes(keyword));
           
