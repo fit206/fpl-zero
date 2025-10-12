@@ -5,8 +5,7 @@ export async function GET() {
   try {
     // Try multiple RSS sources for better reliability - focused on injuries, cards, transfers
     const rssSources = [
-      "https://www.premierleague.com/news/rss", // Premier League Official - PRIMARY SOURCE
-      "https://www.bbc.com/sport/football/rss.xml", // BBC Sport - reliable backup
+      "https://www.bbc.com/sport/football/rss.xml", // BBC Sport - PRIMARY SOURCE (most reliable)
       "https://feeds.skynews.com/feeds/rss/uk/sports/football.xml", // Sky Sports
       "https://www.theguardian.com/football/rss", // Guardian Football
       "https://www.espn.com/soccer/rss", // ESPN Soccer
