@@ -41,26 +41,29 @@ export async function GET() {
           continue;
         }
 
-               // Filter news for FPL-relevant content (injuries, cards, transfers) - STRICT FILTERING
+               // Filter news for FPL-relevant content (injuries, cards, transfers) - ULTRA STRICT FILTERING
                const fplKeywords = [
-                 // Kecederaan pemain - STRICT
+                 // Kecederaan pemain - ULTRA STRICT
                  'injury', 'injured', 'hamstring', 'knee', 'ankle', 'muscle', 'strain', 'fracture', 'concussion',
                  'ruled out', 'doubtful', 'fitness', 'recovery', 'return', 'absence', 'miss', 'unavailable', 'doubt',
                  'questionable', 'out', 'medical', 'treatment', 'surgery', 'rehabilitation', 'physio', 'scan',
                  'knocked out', 'knock', 'blow', 'head injury', 'leg injury', 'arm injury', 'back injury',
+                 'broken', 'sprain', 'tear', 'pull', 'twist', 'dislocation', 'bruise', 'cut', 'wound',
 
-                 // Kad kuning/merah dan suspensi - STRICT
+                 // Kad kuning/merah dan suspensi - ULTRA STRICT
                  'suspension', 'suspended', 'card', 'yellow', 'red', 'ban', 'disciplinary', 'booking', 'sent off',
                  'dismissal', 'ejection', 'caution', 'warning', 'foul', 'tackle', 'challenge', 'referee',
                  'red card', 'yellow card', 'straight red', 'second yellow', 'accumulation', 'accumulated',
+                 'expelled', 'ejected', 'dismissed', 'banned', 'penalty', 'sanction', 'punishment',
 
-                 // Transfer pemain EPL - STRICT
+                 // Transfer pemain EPL - ULTRA STRICT
                  'transfer', 'signing', 'loan', 'contract', 'deal', 'agreement', 'move', 'switch', 'join', 'leave',
                  'departure', 'arrival', 'recruitment', 'acquisition', 'release', 'termination', 'extension',
                  'premier league', 'epl', 'manchester', 'united', 'city', 'liverpool', 'chelsea', 'arsenal', 
                  'tottenham', 'newcastle', 'brighton', 'everton', 'fulham', 'crystal', 'palace', 'west', 'ham', 
                  'wolves', 'bournemouth', 'brentford', 'burnley', 'leicester', 'leeds', 'southampton', 
-                 'nottingham', 'forest', 'villa', 'sheffield', 'luton', 'ipswich'
+                 'nottingham', 'forest', 'villa', 'sheffield', 'luton', 'ipswich',
+                 'signed', 'joins', 'leaves', 'departs', 'arrives', 'recruited', 'acquired', 'released'
                ];
         
         const filteredItems = items.filter((item: any) => {
@@ -68,7 +71,7 @@ export async function GET() {
           const description = (item.description || "").toLowerCase();
           const isFPLRelevant = fplKeywords.some(keyword => title.includes(keyword) || description.includes(keyword));
           
-          // Skip general football news that's not FPL-relevant - STRICT FILTERING
+          // Skip general football news that's not FPL-relevant - ULTRA STRICT FILTERING
           const skipKeywords = [
             // General football content (not FPL-specific)
             'match', 'score', 'result', 'win', 'lose', 'draw', 'victory', 'defeat', 'game', 'fixture',
@@ -77,7 +80,7 @@ export async function GET() {
             'international', 'world cup', 'euro', 'champions league', 'europa league', 'nations league',
             'friendly', 'pre-season', 'training', 'practice', 'session', 'camp',
             
-            // Non-FPL content
+            // Non-FPL content - ULTRA STRICT
             'quiz', 'guess', 'play', 'game', 'entertainment', 'fun', 'trivia', 'history',
             'legends', 'retro', 'vintage', 'classic', 'memories', 'throwback',
             'women', 'female', 'girls', 'ladies', 'womens', 'womens football',
@@ -111,7 +114,34 @@ export async function GET() {
             'religion', 'faith', 'belief', 'church', 'temple', 'mosque', 'synagogue',
             'philosophy', 'ethics', 'morality', 'values', 'principles', 'ideals',
             'psychology', 'mental', 'emotional', 'behavior', 'personality', 'character',
-            'sociology', 'anthropology', 'history', 'geography', 'demographics', 'statistics'
+            'sociology', 'anthropology', 'history', 'geography', 'demographics', 'statistics',
+            
+            // ADDITIONAL ULTRA STRICT FILTERS
+            'chaos', 'reigns', 'scrambling', 'rangers', 'gerrard', 'leaves',
+            'guess', 'footballers', 'quiz', 'play', 'entertainment',
+            '007', 'football', 'kazakhstan', 'uefa', 'shin pads', 'small',
+            'calafiori', 'towel', 'banned', 'farming', 'village', 'icon',
+            'salah', 'river', 'plate', 'diaz', 'fourth-tier', 'mentor',
+            'changed', 'east', 'meets', 'west', 'london', 'air', 'crash',
+            'underdogs', 'triumph', 'rise', 'fall', 'north', 'korea',
+            'sleeping', 'giant', 'wales', 'beat', 'england', 'wembley',
+            'earps', 'queen', 'stops', 'younger', 'mbappe', 'emerging',
+            'brother', 'shadow', 'humble', 'kane', 'england', 'undervalued',
+            'super', 'germany', 'born', 'striker', 'goalkeeping', 'great',
+            'forest', 'consider', 'dyche', 'postecoglou', 'sacked',
+            'man', 'utd', 'palace', 'wharton', 'sunday', 'gossip',
+            'injury-time', 'portugal', 'defeat', 'painful', 'hallgrimss',
+            'newcastle', 'name', 'forest', 'wilson', 'sporting', 'director',
+            'saved', 'everton', 'community', 'day', 'wales', 'beat',
+            'england', 'wembley', 'guess', 'footballers', 'quiz',
+            'mary', 'earps', 'queen', 'stops', 'younger', 'mbappe',
+            'emerging', 'brother', 'shadow', '007', 'football',
+            'kazakhstan', 'uefa', 'shin', 'pads', 'small', 'calafiori',
+            'towel', 'banned', 'farming', 'village', 'liverpool', 'icon',
+            'salah', 'river', 'plate', 'diaz', 'fourth-tier', 'mentor',
+            'changed', 'east', 'meets', 'west', 'london', 'air', 'crash',
+            'underdogs', 'triumph', 'rise', 'fall', 'north', 'korea',
+            'sleeping', 'giant'
           ];
           const shouldSkip = skipKeywords.some(keyword => title.includes(keyword) || description.includes(keyword));
           
