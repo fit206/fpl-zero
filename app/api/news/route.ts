@@ -3,11 +3,12 @@ import { parseStringPromise } from "xml2js";
 
 export async function GET() {
   try {
-    // Try multiple RSS sources for better reliability
+    // Try multiple RSS sources for better reliability - focused on injuries, cards, transfers
     const rssSources = [
-      "https://www.eyefootball.com/rss/",
       "https://www.bbc.com/sport/football/rss.xml",
-      "https://feeds.skynews.com/feeds/rss/uk/sports/football.xml"
+      "https://feeds.skynews.com/feeds/rss/uk/sports/football.xml",
+      "https://www.theguardian.com/football/rss",
+      "https://www.espn.com/soccer/rss"
     ];
 
     for (const rssUrl of rssSources) {
@@ -54,38 +55,62 @@ export async function GET() {
       }
     }
 
-    // If all RSS sources fail, return fallback data
+    // If all RSS sources fail, return fallback data focused on injuries, cards, transfers
     console.log("All RSS sources failed, returning fallback data");
     const fallbackNews = [
       {
-        title: "Analisis Mendalam: Taktik Terkini dalam Liga Perdana Inggeris",
-        link: "https://www.eyefootball.com",
+        title: "Kecederaan Pemain: Update Terkini dari Liga Perdana Inggeris",
+        link: "https://www.bbc.com/sport/football",
         date: new Date().toISOString(),
-        description: "Pandangan pakar mengenai evolusi taktik dan strategi dalam Liga Perdana Inggeris musim ini."
+        description: "Laporan terkini mengenai kecederaan pemain-pemain utama dalam Liga Perdana Inggeris dan kesan terhadap FPL."
       },
       {
-        title: "Statistik Pemain: Siapa yang Menjulang Tinggi?",
-        link: "https://www.eyefootball.com",
+        title: "Kad Kuning dan Merah: Analisis Disiplin Pemain",
+        link: "https://www.bbc.com/sport/football",
         date: new Date(Date.now() - 86400000).toISOString(),
-        description: "Analisis statistik mendalam mengenai prestasi pemain terbaik dalam Liga Perdana Inggeris."
+        description: "Analisis statistik kad kuning dan merah dalam Liga Perdana Inggeris dan kesan terhadap FPL."
       },
       {
-        title: "Perbandingan Pasukan: Analisis Head-to-Head",
-        link: "https://www.eyefootball.com",
+        title: "Transfer Window: Pemain Masuk dan Keluar",
+        link: "https://www.bbc.com/sport/football",
         date: new Date(Date.now() - 172800000).toISOString(),
-        description: "Perbandingan mendalam antara pasukan-pasukan teratas dalam Liga Perdana Inggeris."
+        description: "Update terkini mengenai pemindahan pemain dalam Liga Perdana Inggeris dan kesan terhadap FPL."
       },
       {
-        title: "Prediksi Perlawanan: Analisis xG dan Peluang",
-        link: "https://www.eyefootball.com",
+        title: "Suspension Alert: Pemain Terkena Suspensi",
+        link: "https://www.bbc.com/sport/football",
         date: new Date(Date.now() - 259200000).toISOString(),
-        description: "Analisis expected goals (xG) dan peluang gol untuk perlawanan akan datang."
+        description: "Senarai pemain yang terkena suspensi akibat kad merah dan kesan terhadap FPL."
       },
       {
-        title: "Sejarah dan Rekod: Fakta Menarik Liga Perdana Inggeris",
-        link: "https://www.eyefootball.com",
+        title: "Injury Update: Status Kesihatan Pemain Utama",
+        link: "https://www.bbc.com/sport/football",
         date: new Date(Date.now() - 345600000).toISOString(),
-        description: "Fakta menarik dan rekod sejarah dalam Liga Perdana Inggeris yang perlu anda ketahui."
+        description: "Laporan terkini mengenai status kecederaan pemain-pemain utama dan masa pulih yang dijangka."
+      },
+      {
+        title: "FPL Impact: Kesan Kecederaan Terhadap Fantasy Premier League",
+        link: "https://www.bbc.com/sport/football",
+        date: new Date(Date.now() - 432000000).toISOString(),
+        description: "Analisis kesan kecederaan pemain terhadap strategi FPL dan cadangan penggantian."
+      },
+      {
+        title: "Card Watch: Pemain Berisiko Tinggi Kad Kuning",
+        link: "https://www.bbc.com/sport/football",
+        date: new Date(Date.now() - 518400000).toISOString(),
+        description: "Senarai pemain yang berisiko tinggi mendapat kad kuning dan kesan terhadap FPL."
+      },
+      {
+        title: "Transfer Rumours: Pemain yang Berpotensi Bergerak",
+        link: "https://www.bbc.com/sport/football",
+        date: new Date(Date.now() - 604800000).toISOString(),
+        description: "Gosip transfer terkini dan pemain yang berpotensi berpindah kelab dalam Liga Perdana Inggeris."
+      },
+      {
+        title: "Recovery Timeline: Jadual Pulih Pemain Cedera",
+        link: "https://www.bbc.com/sport/football",
+        date: new Date(Date.now() - 691200000).toISOString(),
+        description: "Jadual jangkaan pulih pemain-pemain yang cedera dan kesan terhadap strategi FPL."
       }
     ];
 

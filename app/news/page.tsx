@@ -52,10 +52,10 @@ export default function NewsPage() {
           <div className="card p-4 lg:p-5 mb-6 lg:mb-8">
             <div className="text-center">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-cyan mx-auto mb-4"></div>
-              <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight text-white mb-2">
-                Memuatkan Berita Bola Sepak EPL
-              </h1>
-              <p className="text-white/80">Mengambil berita terkini dari FootballCritic...</p>
+                    <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight text-white mb-2">
+                      Memuatkan Berita FPL
+                    </h1>
+                    <p className="text-white/80">Mengambil update kecederaan, kad & transfer...</p>
             </div>
           </div>
         </div>
@@ -97,12 +97,12 @@ export default function NewsPage() {
         {/* Header */}
         <div className="card p-4 lg:p-5 mb-6 lg:mb-8">
           <div className="text-center">
-            <h1 className="text-2xl lg:text-3xl font-extrabold text-white mb-2">
-              Berita Bola Sepak EPL
-            </h1>
-            <p className="text-white/80">
-              Berita terkini dari FootballCritic dan sumber bola sepak terbaik
-            </p>
+                  <h1 className="text-2xl lg:text-3xl font-extrabold text-white mb-2">
+                    Berita FPL: Kecederaan, Kad & Transfer
+                  </h1>
+                  <p className="text-white/80">
+                    Update terkini mengenai kecederaan pemain, kad kuning/merah, dan transfer untuk FPL
+                  </p>
             {news.length > 0 && (
               <div className="mt-3 text-sm text-white/60">
                 {news.length} artikel ditemui
