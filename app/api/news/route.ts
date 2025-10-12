@@ -8,7 +8,9 @@ export async function GET() {
       "https://www.bbc.com/sport/football/rss.xml",
       "https://feeds.skynews.com/feeds/rss/uk/sports/football.xml",
       "https://www.theguardian.com/football/rss",
-      "https://www.espn.com/soccer/rss"
+      "https://www.espn.com/soccer/rss",
+      "https://www.premierleague.com/news/rss",
+      "https://www.football365.com/rss"
     ];
 
     for (const rssUrl of rssSources) {
@@ -38,7 +40,22 @@ export async function GET() {
           continue;
         }
 
-        const news = items.slice(0, 9).map((item: any) => ({
+        // Filter news for FPL-relevant content (injuries, cards, transfers)
+        const fplKeywords = [
+          'injury', 'injured', 'suspension', 'suspended', 'card', 'yellow', 'red', 'transfer', 'signing', 'loan',
+          'kecederaan', 'cedera', 'kad', 'kuning', 'merah', 'pindah', 'transfer', 'hamstring', 'knee', 'ankle',
+          'muscle', 'strain', 'fracture', 'concussion', 'ban', 'disciplinary', 'appeal', 'ruled out', 'doubtful',
+          'fitness', 'recovery', 'return', 'absence', 'miss', 'unavailable', 'doubt', 'questionable', 'out',
+          'premier league', 'fpl', 'fantasy', 'points', 'clean sheet', 'assist', 'goal', 'penalty', 'free kick'
+        ];
+        
+        const filteredItems = items.filter((item: any) => {
+          const title = (item.title || "").toLowerCase();
+          const description = (item.description || "").toLowerCase();
+          return fplKeywords.some(keyword => title.includes(keyword) || description.includes(keyword));
+        });
+
+        const news = filteredItems.slice(0, 9).map((item: any) => ({
           title: item.title || "No title",
           link: item.link || "#",
           date: item.pubDate || "",
