@@ -40,19 +40,28 @@ export async function GET() {
           continue;
         }
 
-        // Filter news for FPL-relevant content (injuries, cards, transfers)
+        // Filter news for FPL-relevant content (injuries, cards, transfers) - STRICT FILTERING
         const fplKeywords = [
           'injury', 'injured', 'suspension', 'suspended', 'card', 'yellow', 'red', 'transfer', 'signing', 'loan',
-          'kecederaan', 'cedera', 'kad', 'kuning', 'merah', 'pindah', 'transfer', 'hamstring', 'knee', 'ankle',
-          'muscle', 'strain', 'fracture', 'concussion', 'ban', 'disciplinary', 'appeal', 'ruled out', 'doubtful',
-          'fitness', 'recovery', 'return', 'absence', 'miss', 'unavailable', 'doubt', 'questionable', 'out',
-          'premier league', 'fpl', 'fantasy', 'points', 'clean sheet', 'assist', 'goal', 'penalty', 'free kick'
+          'hamstring', 'knee', 'ankle', 'muscle', 'strain', 'fracture', 'concussion', 'ban', 'disciplinary', 
+          'ruled out', 'doubtful', 'fitness', 'recovery', 'return', 'absence', 'miss', 'unavailable', 'doubt', 
+          'questionable', 'out', 'fpl', 'fantasy', 'points', 'clean sheet', 'assist', 'goal', 'penalty'
         ];
         
         const filteredItems = items.filter((item: any) => {
           const title = (item.title || "").toLowerCase();
           const description = (item.description || "").toLowerCase();
-          return fplKeywords.some(keyword => title.includes(keyword) || description.includes(keyword));
+          const isFPLRelevant = fplKeywords.some(keyword => title.includes(keyword) || description.includes(keyword));
+          
+          // Skip general football news that's not FPL-relevant
+          const skipKeywords = ['match', 'game', 'result', 'score', 'win', 'lose', 'draw', 'league', 'table', 'season'];
+          const shouldSkip = skipKeywords.some(keyword => title.includes(keyword) || description.includes(keyword));
+          
+          if (isFPLRelevant && !shouldSkip) {
+            console.log(`FPL-relevant news found: ${title.substring(0, 50)}...`);
+          }
+          
+          return isFPLRelevant && !shouldSkip;
         });
 
         const news = filteredItems.slice(0, 9).map((item: any) => ({
@@ -63,8 +72,10 @@ export async function GET() {
         }));
 
         if (news.length > 0) {
-          console.log(`Successfully loaded ${news.length} news items from ${rssUrl}`);
+          console.log(`Successfully loaded ${news.length} FPL-relevant news items from ${rssUrl}`);
           return NextResponse.json({ news });
+        } else {
+          console.log(`No FPL-relevant news found in ${rssUrl}, trying next source...`);
         }
       } catch (error: any) {
         console.log(`Error with ${rssUrl}:`, error?.message || error);
