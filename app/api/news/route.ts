@@ -5,12 +5,12 @@ export async function GET() {
   try {
     // Try multiple RSS sources for better reliability - focused on injuries, cards, transfers
     const rssSources = [
+      "https://www.football365.com/rss",
       "https://www.bbc.com/sport/football/rss.xml",
       "https://feeds.skynews.com/feeds/rss/uk/sports/football.xml",
       "https://www.theguardian.com/football/rss",
       "https://www.espn.com/soccer/rss",
-      "https://www.premierleague.com/news/rss",
-      "https://www.football365.com/rss"
+      "https://www.premierleague.com/news/rss"
     ];
 
     for (const rssUrl of rssSources) {
@@ -40,7 +40,7 @@ export async function GET() {
           continue;
         }
 
-        // Filter news for FPL-relevant content (injuries, cards, transfers) - STRICT FILTERING
+        // Filter news for FPL-relevant content (injuries, cards, transfers) - RELAXED FILTERING
         const fplKeywords = [
           // Kecederaan pemain
           'injury', 'injured', 'hamstring', 'knee', 'ankle', 'muscle', 'strain', 'fracture', 'concussion',
@@ -56,7 +56,17 @@ export async function GET() {
           'departure', 'arrival', 'recruitment', 'acquisition', 'release', 'termination', 'extension',
           
           // FPL specific
-          'fpl', 'fantasy', 'points', 'clean sheet', 'assist', 'goal', 'penalty', 'captain', 'vice-captain'
+          'fpl', 'fantasy', 'points', 'clean sheet', 'assist', 'goal', 'penalty', 'captain', 'vice-captain',
+          
+          // General football terms for Football365
+          'manchester', 'united', 'city', 'liverpool', 'chelsea', 'arsenal', 'tottenham', 'newcastle',
+          'brighton', 'everton', 'fulham', 'crystal', 'palace', 'west', 'ham', 'wolves', 'bournemouth',
+          'brentford', 'burnley', 'leicester', 'leeds', 'southampton', 'nottingham', 'forest', 'villa',
+          
+          // More general terms
+          'premier', 'league', 'football', 'soccer', 'player', 'team', 'club', 'manager', 'coach',
+          'game', 'match', 'season', 'win', 'lose', 'draw', 'score', 'goal', 'assist', 'clean',
+          'sheet', 'defender', 'midfielder', 'forward', 'striker', 'goalkeeper', 'keeper'
         ];
         
         const filteredItems = items.filter((item: any) => {
@@ -87,11 +97,11 @@ export async function GET() {
           description: item.description || "",
         }));
 
-        if (news.length > 0) {
+        if (news.length >= 4) { // Accept if we have at least 4 news items
           console.log(`Successfully loaded ${news.length} FPL-relevant news items from ${rssUrl}`);
           return NextResponse.json({ news });
         } else {
-          console.log(`No FPL-relevant news found in ${rssUrl}, trying next source...`);
+          console.log(`Only ${news.length} FPL-relevant news found in ${rssUrl}, trying next source...`);
         }
       } catch (error: any) {
         console.log(`Error with ${rssUrl}:`, error?.message || error);
@@ -155,6 +165,24 @@ export async function GET() {
         link: "https://www.bbc.com/sport/football",
         date: new Date(Date.now() - 691200000).toISOString(),
         description: "Jadual jangkaan pulih pemain-pemain yang cedera dan kesan terhadap strategi FPL."
+      },
+      {
+        title: "FPL Strategy: Tips Memilih Pemain untuk Gameweek Seterusnya",
+        link: "https://www.bbc.com/sport/football",
+        date: new Date(Date.now() - 777600000).toISOString(),
+        description: "Panduan strategi FPL untuk memilih pemain terbaik berdasarkan form dan fixture."
+      },
+      {
+        title: "Captain Choice: Analisis Pemain Terbaik untuk Captain",
+        link: "https://www.bbc.com/sport/football",
+        date: new Date(Date.now() - 864000000).toISOString(),
+        description: "Analisis mendalam pemain-pemain terbaik untuk dijadikan captain dalam FPL."
+      },
+      {
+        title: "Differential Picks: Pemain Under-the-Radar untuk FPL",
+        link: "https://www.bbc.com/sport/football",
+        date: new Date(Date.now() - 950400000).toISOString(),
+        description: "Senarai pemain yang kurang popular tetapi berpotensi memberikan mata tinggi dalam FPL."
       }
     ];
 
