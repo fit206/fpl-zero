@@ -5,11 +5,11 @@ export async function GET() {
   try {
     // Try multiple RSS sources for better reliability - focused on injuries, cards, transfers
     const rssSources = [
-      "https://www.bbc.com/sport/football/rss.xml", // BBC Sport - most reliable
+      "https://www.premierleague.com/news/rss", // Premier League Official - PRIMARY SOURCE
+      "https://www.bbc.com/sport/football/rss.xml", // BBC Sport - reliable backup
       "https://feeds.skynews.com/feeds/rss/uk/sports/football.xml", // Sky Sports
       "https://www.theguardian.com/football/rss", // Guardian Football
       "https://www.espn.com/soccer/rss", // ESPN Soccer
-      "https://www.premierleague.com/news/rss", // Premier League Official
       "https://www.mirror.co.uk/sport/football/rss.xml", // Mirror Football
       "https://www.dailymail.co.uk/sport/football/rss.xml", // Daily Mail Football
       "https://www.football365.com/rss" // Football365 - moved to last due to proxy issues
