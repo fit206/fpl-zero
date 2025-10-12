@@ -66,99 +66,30 @@ export async function GET() {
                  'signed', 'joins', 'leaves', 'departs', 'arrives', 'recruited', 'acquired', 'released'
                ];
         
+        // ULTRA STRICT FILTERING: Only show injuries, cards, and transfers
         const filteredItems = items.filter((item: any) => {
           const title = (item.title || "").toLowerCase();
           const description = (item.description || "").toLowerCase();
-          const isFPLRelevant = fplKeywords.some(keyword => title.includes(keyword) || description.includes(keyword));
           
-          // Debug logging
           console.log(`🔍 Checking: "${title.substring(0, 50)}..."`);
-          console.log(`   FPL Relevant: ${isFPLRelevant}`);
           
-          // Skip general football news that's not FPL-relevant - ULTRA STRICT FILTERING
-          const skipKeywords = [
-            // General football content (not FPL-specific)
-            'match', 'score', 'result', 'win', 'lose', 'draw', 'victory', 'defeat', 'game', 'fixture',
-            'highlights', 'recap', 'review', 'analysis', 'tactics', 'formation', 'strategy',
-            'championship', 'cup', 'trophy', 'final', 'semi-final', 'quarter-final', 'playoff',
-            'international', 'world cup', 'euro', 'champions league', 'europa league', 'nations league',
-            'friendly', 'pre-season', 'training', 'practice', 'session', 'camp',
-            
-            // Non-FPL content - ULTRA STRICT
-            'quiz', 'guess', 'play', 'game', 'entertainment', 'fun', 'trivia', 'history',
-            'legends', 'retro', 'vintage', 'classic', 'memories', 'throwback',
-            'women', 'female', 'girls', 'ladies', 'womens', 'womens football',
-            'youth', 'academy', 'development', 'under-21', 'under-19', 'reserves',
-            'community', 'charity', 'foundation', 'outreach', 'social',
-            'technology', 'var', 'referee', 'officials', 'rules', 'regulations',
-            'stadium', 'ground', 'venue', 'facilities', 'infrastructure',
-            'business', 'finance', 'money', 'revenue', 'sponsorship', 'commercial',
-            'media', 'journalism', 'interview', 'press', 'conference', 'statement',
-            'rumours', 'gossip', 'speculation', 'reports', 'sources', 'insider',
-            'opinion', 'editorial', 'column', 'blog', 'article', 'feature',
-            'statistics', 'data', 'analytics', 'metrics', 'performance', 'stats',
-            'weather', 'climate', 'pitch', 'surface', 'grass', 'artificial',
-            'travel', 'journey', 'trip', 'tour', 'visit', 'away', 'home',
-            'celebration', 'party', 'festival', 'event', 'ceremony', 'awards',
-            'documentary', 'film', 'movie', 'video', 'series', 'show',
-            'podcast', 'radio', 'tv', 'television', 'broadcast', 'streaming',
-            'social media', 'twitter', 'instagram', 'facebook', 'tiktok', 'youtube',
-            'fashion', 'style', 'clothing', 'kit', 'jersey', 'shirt', 'boots',
-            'food', 'drink', 'restaurant', 'cafe', 'bar', 'pub', 'hotel',
-            'music', 'song', 'anthem', 'hymn', 'chant', 'song', 'lyrics',
-            'art', 'design', 'logo', 'brand', 'identity', 'crest', 'badge',
-            'education', 'school', 'university', 'college', 'degree', 'course',
-            'health', 'wellness', 'fitness', 'exercise', 'training', 'gym',
-            'lifestyle', 'culture', 'tradition', 'heritage', 'custom', 'ritual',
-            'politics', 'government', 'policy', 'law', 'legal', 'court', 'justice',
-            'economy', 'market', 'investment', 'stock', 'shares', 'trading',
-            'science', 'research', 'study', 'experiment', 'innovation', 'technology',
-            'environment', 'sustainability', 'green', 'eco', 'carbon', 'climate',
-            'society', 'community', 'public', 'citizen', 'democracy', 'rights',
-            'religion', 'faith', 'belief', 'church', 'temple', 'mosque', 'synagogue',
-            'philosophy', 'ethics', 'morality', 'values', 'principles', 'ideals',
-            'psychology', 'mental', 'emotional', 'behavior', 'personality', 'character',
-            'sociology', 'anthropology', 'history', 'geography', 'demographics', 'statistics',
-            
-            // ADDITIONAL ULTRA STRICT FILTERS
-            'chaos', 'reigns', 'scrambling', 'rangers', 'gerrard', 'leaves',
-            'guess', 'footballers', 'quiz', 'play', 'entertainment',
-            '007', 'football', 'kazakhstan', 'uefa', 'shin pads', 'small',
-            'calafiori', 'towel', 'banned', 'farming', 'village', 'icon',
-            'salah', 'river', 'plate', 'diaz', 'fourth-tier', 'mentor',
-            'changed', 'east', 'meets', 'west', 'london', 'air', 'crash',
-            'underdogs', 'triumph', 'rise', 'fall', 'north', 'korea',
-            'sleeping', 'giant', 'wales', 'beat', 'england', 'wembley',
-            'earps', 'queen', 'stops', 'younger', 'mbappe', 'emerging',
-            'brother', 'shadow', 'humble', 'kane', 'england', 'undervalued',
-            'super', 'germany', 'born', 'striker', 'goalkeeping', 'great',
-            'forest', 'consider', 'dyche', 'postecoglou', 'sacked',
-            'man', 'utd', 'palace', 'wharton', 'sunday', 'gossip',
-            'injury-time', 'portugal', 'defeat', 'painful', 'hallgrimss',
-            'newcastle', 'name', 'forest', 'wilson', 'sporting', 'director',
-            'saved', 'everton', 'community', 'day', 'wales', 'beat',
-            'england', 'wembley', 'guess', 'footballers', 'quiz',
-            'mary', 'earps', 'queen', 'stops', 'younger', 'mbappe',
-            'emerging', 'brother', 'shadow', '007', 'football',
-            'kazakhstan', 'uefa', 'shin', 'pads', 'small', 'calafiori',
-            'towel', 'banned', 'farming', 'village', 'liverpool', 'icon',
-            'salah', 'river', 'plate', 'diaz', 'fourth-tier', 'mentor',
-            'changed', 'east', 'meets', 'west', 'london', 'air', 'crash',
-            'underdogs', 'triumph', 'rise', 'fall', 'north', 'korea',
-            'sleeping', 'giant'
-          ];
-          const shouldSkip = skipKeywords.some(keyword => title.includes(keyword) || description.includes(keyword));
+          // ONLY show if it contains FPL-relevant keywords
+          const hasInjury = ['injury', 'injured', 'hamstring', 'knee', 'ankle', 'muscle', 'strain', 'fracture', 'concussion', 'ruled out', 'doubtful', 'fitness', 'recovery', 'medical', 'treatment', 'surgery', 'knocked out', 'knock', 'blow', 'broken', 'sprain', 'tear', 'pull', 'twist'].some(keyword => title.includes(keyword) || description.includes(keyword));
           
-          // ULTRA STRICT: Only show if it's FPL-relevant AND not in skip list
-          if (isFPLRelevant && !shouldSkip) {
+          const hasCard = ['suspension', 'suspended', 'card', 'yellow', 'red', 'ban', 'disciplinary', 'booking', 'sent off', 'dismissal', 'red card', 'yellow card', 'straight red', 'second yellow', 'expelled', 'ejected', 'banned'].some(keyword => title.includes(keyword) || description.includes(keyword));
+          
+          const hasTransfer = ['transfer', 'signing', 'loan', 'contract', 'deal', 'agreement', 'move', 'switch', 'join', 'leave', 'departure', 'arrival', 'signed', 'joins', 'leaves', 'departs', 'arrives'].some(keyword => title.includes(keyword) || description.includes(keyword));
+          
+          const isFPLRelevant = hasInjury || hasCard || hasTransfer;
+          
+          if (isFPLRelevant) {
             console.log(`✅ FPL-relevant news found: ${title.substring(0, 50)}...`);
-          } else if (shouldSkip) {
-            console.log(`❌ Skipped non-FPL content: ${title.substring(0, 50)}...`);
+            console.log(`   Injury: ${hasInjury}, Card: ${hasCard}, Transfer: ${hasTransfer}`);
           } else {
             console.log(`❌ Not FPL-relevant: ${title.substring(0, 50)}...`);
           }
           
-          return isFPLRelevant && !shouldSkip;
+          return isFPLRelevant;
         });
 
         const news = filteredItems.slice(0, 9).map((item: any) => ({
