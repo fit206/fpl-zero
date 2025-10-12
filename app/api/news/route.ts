@@ -48,8 +48,8 @@ export async function GET() {
           console.log(`Successfully loaded ${news.length} news items from ${rssUrl}`);
           return NextResponse.json({ news });
         }
-      } catch (error) {
-        console.log(`Error with ${rssUrl}:`, error.message);
+      } catch (error: any) {
+        console.log(`Error with ${rssUrl}:`, error?.message || error);
         continue;
       }
     }
