@@ -13,7 +13,38 @@ export default function NewsPage() {
         setLoading(true);
         setError("");
         
-        const res = await fetch("/api/news");
+        // Check cache first
+        const cacheKey = 'news_cache';
+        const cached = localStorage.getItem(cacheKey);
+        if (cached) {
+          try {
+            const parsed = JSON.parse(cached);
+            const now = Date.now();
+            // Cache valid for 5 minutes
+            if (now - parsed.timestamp < 5 * 60 * 1000) {
+              setNews(parsed.data);
+              setLoading(false);
+              return;
+            }
+          } catch (e) {
+            // Invalid cache, continue with fetch
+          }
+        }
+        
+        // Add timeout to prevent hanging
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+        
+        const res = await fetch("/api/news", {
+          signal: controller.signal,
+          cache: 'force-cache',
+          headers: {
+            'Cache-Control': 'max-age=300'
+          }
+        });
+        
+        clearTimeout(timeoutId);
+        
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
         
@@ -22,9 +53,20 @@ export default function NewsPage() {
         }
         
         setNews(data.news || []);
+        
+        // Cache the result
+        localStorage.setItem(cacheKey, JSON.stringify({
+          data: data.news || [],
+          timestamp: Date.now()
+        }));
+        
       } catch (err: any) {
         console.error("Failed to fetch news:", err);
-        setError("Tidak dapat memuatkan berita EPL sekarang.");
+        if (err.name === 'AbortError') {
+          setError("Masa tunggu tamat. Cuba lagi.");
+        } else {
+          setError("Tidak dapat memuatkan berita EPL sekarang.");
+        }
       } finally {
         setLoading(false);
       }
@@ -57,6 +99,27 @@ export default function NewsPage() {
                     </h1>
                     <p className="text-white/80">Mengambil update kecederaan, kad & transfer...</p>
             </div>
+          </div>
+          
+          {/* Loading Skeleton */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+            {[...Array(6)].map((_, index) => (
+              <div key={index} className="card p-4 lg:p-5 animate-pulse">
+                <div className="space-y-3">
+                  <div className="flex items-center">
+                    <div className="w-4 h-4 bg-white/20 rounded mr-2"></div>
+                    <div className="h-3 bg-white/20 rounded w-20"></div>
+                  </div>
+                  <div className="h-5 bg-white/20 rounded w-full"></div>
+                  <div className="h-5 bg-white/20 rounded w-3/4"></div>
+                  <div className="h-4 bg-white/20 rounded w-full"></div>
+                  <div className="h-4 bg-white/20 rounded w-2/3"></div>
+                  <div className="pt-2">
+                    <div className="h-4 bg-white/20 rounded w-32"></div>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </main>

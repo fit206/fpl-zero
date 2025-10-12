@@ -64,8 +64,8 @@ export default function CaptainPage() {
       try {
         const parsed = JSON.parse(cached);
         const now = Date.now();
-        // Cache valid for 10 minutes untuk speed
-        if (now - parsed.timestamp < 10 * 60 * 1000) {
+        // Cache valid for 15 minutes untuk speed
+        if (now - parsed.timestamp < 15 * 60 * 1000) {
           setData(parsed.data);
           setLoading(false);
           return;
@@ -76,12 +76,20 @@ export default function CaptainPage() {
     }
     
     try {
+      // Add timeout to prevent hanging
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
+      
       const res = await fetch(`/api/captain?entryId=${id}`, { 
+        signal: controller.signal,
         cache: 'force-cache',
         headers: {
-          'Cache-Control': 'max-age=300'
+          'Cache-Control': 'max-age=900' // 15 minutes
         }
       });
+      
+      clearTimeout(timeoutId);
+      
       const json = await res.json();
       if (!res.ok) setErr(json?.error || 'Ralat');
       else {
@@ -92,8 +100,12 @@ export default function CaptainPage() {
           timestamp: Date.now()
         }));
       }
-    } catch {
-      setErr('Ralat rangkaian');
+    } catch (err: any) {
+      if (err.name === 'AbortError') {
+        setErr('Masa tunggu tamat. Cuba lagi.');
+      } else {
+        setErr('Ralat rangkaian');
+      }
     } finally {
       setLoading(false);
     }
@@ -147,15 +159,44 @@ export default function CaptainPage() {
         {err && <div className="rounded-xl sm:rounded-2xl border border-red-200 bg-white text-red-700 p-3 sm:p-4 shadow-sm mb-4">{err}</div>}
 
         {loading && (
-          <div className="rounded-xl sm:rounded-2xl border border-gray-200 bg-white text-slate-900 p-6 text-center shadow-sm">
-            <div className="flex items-center justify-center gap-3">
-              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-black"></div>
-              <span>Memuat cadangan kapten...</span>
+          <>
+            <div className="rounded-xl sm:rounded-2xl border border-gray-200 bg-white text-slate-900 p-6 text-center shadow-sm mb-4">
+              <div className="flex items-center justify-center gap-3">
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-black"></div>
+                <span>Memuat cadangan kapten...</span>
+              </div>
+              <div className="mt-3 text-sm text-slate-600">
+                Menganalisis form, minutes, xGI share, dan clean sheet probability
+              </div>
             </div>
-            <div className="mt-3 text-sm text-slate-600">
-              Menganalisis form, minutes, xGI share, dan clean sheet probability
+            
+            {/* Loading Skeleton */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+              {[...Array(4)].map((_, index) => (
+                <div key={index} className="rounded-xl sm:rounded-2xl border border-gray-200 bg-white text-slate-900 p-3 sm:p-4 shadow-sm animate-pulse">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="h-5 bg-gray-200 rounded w-32"></div>
+                    <div className="h-6 bg-gray-200 rounded-full w-24"></div>
+                  </div>
+                  <div className="flex items-center gap-1.5 sm:gap-2 mb-2">
+                    <div className="h-5 bg-gray-200 rounded-full w-12"></div>
+                    <div className="h-5 bg-gray-200 rounded-full w-16"></div>
+                    <div className="h-5 bg-gray-200 rounded-full w-16"></div>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2 mb-3">
+                    <div className="h-4 bg-gray-200 rounded w-full"></div>
+                    <div className="h-4 bg-gray-200 rounded w-full"></div>
+                    <div className="h-4 bg-gray-200 rounded w-full"></div>
+                  </div>
+                  <div className="space-y-1">
+                    <div className="h-3 bg-gray-200 rounded w-full"></div>
+                    <div className="h-3 bg-gray-200 rounded w-3/4"></div>
+                    <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+                  </div>
+                </div>
+              ))}
             </div>
-          </div>
+          </>
         )}
 
         {!hasData && !loading && !data && !err && (
