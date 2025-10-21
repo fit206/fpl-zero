@@ -73,7 +73,7 @@ export default function NotificationsPage() {
     const newDismissed = new Set(dismissedIds);
     newDismissed.add(id);
     setDismissedIds(newDismissed);
-    localStorage.setItem('dismissedNotifications', JSON.stringify([...newDismissed]));
+    localStorage.setItem('dismissedNotifications', JSON.stringify(Array.from(newDismissed)));
   };
 
   const clearAllDismissed = () => {
