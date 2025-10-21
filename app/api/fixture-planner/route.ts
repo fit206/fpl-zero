@@ -134,7 +134,7 @@ export async function GET(req: NextRequest) {
     });
 
     // Sort teams by avg difficulty (easiest first)
-    teamFixtureRuns.sort((a, b) => a.avgDifficulty - b.avgDifficulty);
+    teamFixtureRuns.sort((a: { avgDifficulty: number }, b: { avgDifficulty: number }) => a.avgDifficulty - b.avgDifficulty);
 
     const response = {
       currentGW,
