@@ -119,7 +119,7 @@ export async function GET(req: NextRequest) {
       // Calculate average difficulty untuk next 5 fixtures
       const next5Fixtures = teamFixtures.slice(0, 5);
       const avgDifficulty = next5Fixtures.length > 0
-        ? next5Fixtures.reduce((sum: number, f) => sum + f.difficulty, 0) / next5Fixtures.length
+        ? next5Fixtures.reduce((sum: number, f: { difficulty: number }) => sum + f.difficulty, 0) / next5Fixtures.length
         : 3;
 
       return {
